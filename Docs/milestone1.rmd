@@ -1,0 +1,65 @@
+---
+title: 'Milestone 1'
+author: 'Anh Le, Eve Wicksteed'
+output:
+  html_document:
+    df_print: paged
+editor_options:
+  chunk_output_type: inline
+---
+
+```{r libraries}
+library(here)
+library(tidyverse)
+library(DT)
+```
+
+
+# Air Quality Data
+
+## Introduction
+
+Something about air quality...
+
+## Data Description
+
+We use this [dataset](https://archive.ics.uci.edu/ml/datasets/Air+Quality) from ...
+The data has 9358 instances and 15 attributes.
+
+## Exploring the dataset
+
+```{r read data}
+#airq <- readr::read_csv(here::here("data","AirQualityUCI.csv"))
+airq <- readr::read_csv(here::here("data","airquality.csv"))
+DT::datatable(airq)
+```
+
+
+
+### summary stats
+
+look at missing values
+range of values, 
+what variables are available?
+
+### graph 1
+
+faceted plots of variables vs time
+
+### graph 2
+
+correlogram of pollutants
+
+### graph 3
+
+plot of temp, RH.
+
+## Research question
+
+## Plan of action
+
+## References
+
+S. De Vito, E. Massera, M. Piga, L. Martinotto, G. Di Francia, On field calibration of an electronic nose for benzene estimation in an urban pollution monitoring scenario, Sensors and Actuators B: Chemical, Volume 129, Issue 2, 22 February 2008, Pages 750-757, ISSN 0925-4005.
+
+
