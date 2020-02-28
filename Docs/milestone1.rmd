@@ -8,6 +8,13 @@ editor_options:
   chunk_output_type: inline
 ---
 
+```{r libraries}
+library(here)
+library(tidyverse)
+```
+
+
+
 # Air Quality Data
 
 ## Introduction
@@ -20,6 +27,14 @@ We use this [dataset](https://archive.ics.uci.edu/ml/datasets/Air+Quality) from 
 The data has 9358 instances and 15 attributes.
 
 ## Exploring the dataset
+
+```{r read data}
+#airq <- readr::read_csv(here::here("data","AirQualityUCI.csv"))
+airq <- readr::read_csv(here::here("data","airquality.csv"))
+airq
+```
+
+
 
 ### summary stats
 
