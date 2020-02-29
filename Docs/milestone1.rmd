@@ -70,11 +70,33 @@ DT::datatable(airq)
 
 
 
-### summary stats
+### Summary Statistics
 
-look at missing values
-range of values, 
-what variables are available?
+```{r summary stats}
+# Five-number summary for each variable
+summary(airq)
+
+# Look at missing values for each variable
+missing = list()
+for(i in 1:15) {
+  l = length(which(airq[i] == -200))
+  missing[[i]] = l
+}
+obs = list()
+for(i in 1:15) {
+  o = length(airq[[i]])
+  obs[[i]] = o
+}
+dfmissing = data.frame(Variables, 
+                       matrix(unlist(missing), nrow=length(missing), byrow=T),
+                       matrix(unlist(obs), nrow=length(missing), byrow=T))
+names(dfmissing)[names(dfmissing) == "matrix.unlist.missing...nrow...length.missing...byrow...T."] = "Count of Missing Values"
+names(dfmissing)[names(dfmissing) == "matrix.unlist.obs...nrow...length.missing...byrow...T."] = "Total Observations"
+dfmissing %>% 
+  mutate(`% Missing Values` = `Count of Missing Values`/`Total Observations`*100) %>%
+  mutate(`Usable Observations` = `Total Observations` - `Count of Missing Values`)
+
+```
 
 ### graph 1
 
