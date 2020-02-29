@@ -12,6 +12,10 @@ editor_options:
 library(here)
 library(tidyverse)
 library(DT)
+library(knitr)
+library(lubridate) 
+library(tidyquant)
+library(corrplot)
 ```
 
 
@@ -21,10 +25,40 @@ library(DT)
 
 Something about air quality...
 
+
 ## Data Description
 
-We use this [dataset](https://archive.ics.uci.edu/ml/datasets/Air+Quality) from ...
-The data has 9358 instances and 15 attributes.
+The air quality [dataset](https://archive.ics.uci.edu/ml/datasets/Air+Quality) used in this analysis was obtained from the University of California Irvine Machine learning Repository. It was contributed by Saverio De Vito from the National Agency for New Technologies, Energy and Sustainable Economic Development. 
+
+The dataset contains 15 variables and 9358 observations of hourly averaged responses from an Air Quality Chemical Multisensor Device. Data were recorded from March 2004 to February 2005, in a significantly polluted area, at road level, within a city in Italy. Variables include the date and time each response was recorded, and the corresponding concentrations of 13 air pollutants analyzed by the sensor device. Missing values are tagged with -200 value. Below is the entire variable set: 
+
+```{r echo = FALSE, results='asis'}
+Variables = c("Date", "Time", "CO(GT)", "PT08.S1(CO)", "NMHC(GT)", 
+              "C6H6(GT)","PT08.S2(NMHC)","NOx(GT)", "PT08.S3(NOx)", "NO2(GT)",
+              "PT08.S4(NO2)", "PT08.S5(O3)", "T", "RH", "AH")
+Type = c("character", "time", "double", "integer", "integer",
+         "double", "integer", "integer","integer", "integer",
+         "integer", "integer", "double","double","double")
+Description = c("Date (DD/MM/YYYY)",
+                "Time (HH.MM.SS)",
+                "True hourly averaged concentration CO in mg/m^3 (reference analyzer)",
+                "PT08.S1 (tin oxide) hourly averaged sensor response (nominally CO targeted)",
+                "True hourly averaged overall Non Metanic HydroCarbons concentration in microg/m^3 (reference analyzer)",
+                "True hourly averaged Benzene concentration in microg/m^3 (reference analyzer)",
+                "PT08.S2 (titania) hourly averaged sensor response (nominally NMHC targeted)",
+                "True hourly averaged NOx concentration in ppb (reference analyzer)",
+                "PT08.S3 (tungsten oxide) hourly averaged sensor response (nominally NOx targeted)",
+                "True hourly averaged NO2 concentration in microg/m^3 (reference analyzer)",
+                "PT08.S4 (tungsten oxide) hourly averaged sensor response (nominally NO2 targeted)",
+                "PT08.S5 (indium oxide) hourly averaged sensor response (nominally O3 targeted)",
+                "Temperature in °C",
+                "Relative Humidity (%)",
+                "AH Absolute Humidity")
+desc.tbl = data.frame(Variables, Type, Description)
+kable(desc.tbl)
+```
+
+
 
 ## Exploring the dataset
 
