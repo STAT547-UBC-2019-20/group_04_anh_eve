@@ -246,10 +246,11 @@ airq_monthly %>%
 
 
 
-
 ## Research question
+In this analysis, we will attempt to determine the (seasonal?) effects of temperature and humidity on the concentration of air pollutants.
 
 ## Plan of action
+With our research question, we are interested in the hourly averaged (?) concentrations of air pollutants, temperature and humidity. We will ignore variables which have too many missing data to increase the precision of this analysis. After dealing with the missing data, we will perform a linear regression analysis using OLS (ordinary least square) method. Coefficients of relevant variables will be plotted with confidence intervals.
 
 ## References
 
