@@ -76,11 +76,15 @@ DT::datatable(airq)
 
 ### Summary Statistics
 
+The following shows the five-number stats summary for each variable:
+```{r}
+# Five-number summary for each variable
+summary(airq)
+```
+
 The following shows some preliminary info on the air quality dataset that we are using. We record the number of total observations, number of missing observations, percentage of missing values and the number of usable observations. 
 
 ```{r summary stats}
-# Five-number summary for each variable
-summary(airq)
 
 # Look at missing values for each variable
 missing = list()
@@ -124,7 +128,7 @@ corrplot(airq_corr,
          tl.col = "blue",
          diag = FALSE)
 ```
-
+Looking at the correlations of the pollutants with weather, we can see that for all pollutants except NOx, temperature (T) is positively correlated, although weakly so. This means that higher temperatures correspond to higher concentrations of the gases. Relative humidity (RH) is negatively and correlated to temperature and has a weak negative correlation to the concentrations of pollutants, except NOx. Absolute humidity (AH) has stronger correlations, mostly positive, although, like temperature, it has a negative correlation with NOx. 
 
 
 ### Graph 2: Concentration of some Air Pollutants, Temperature, Humidity over Time
