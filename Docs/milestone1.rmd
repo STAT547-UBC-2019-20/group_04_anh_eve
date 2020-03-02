@@ -8,7 +8,7 @@ editor_options:
   chunk_output_type: inline
 ---
 
-```{r libraries}
+```{r libraries, warnings = FALSE, echo= FALSE}
 library(here)
 library(tidyverse)
 library(DT)
@@ -64,7 +64,10 @@ kable(desc.tbl)
 
 ## Exploring the dataset
 
+The dataset is shown below:
+
 ```{r read data}
+# first we read the data in
 airq <- readr::read_csv(here::here("data","airquality.csv"))
 DT::datatable(airq)
 ```
@@ -72,6 +75,8 @@ DT::datatable(airq)
 
 
 ### Summary Statistics
+
+The following shows some preliminary info on the air quality dataset that we are using. We record the number of total observations, number of missing observations, percentage of missing values and the number of usable observations. 
 
 ```{r summary stats}
 # Five-number summary for each variable
@@ -99,7 +104,7 @@ dfmissing %>%
 
 ```
 
-
+From this we see that for many of the observations less than 4% of the data is missing. This is adequate for the research we are conducting. 
 
 ### Graph 1: Correlogram of pollutants
 ``` {r Graph 1}
