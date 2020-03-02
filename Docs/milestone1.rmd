@@ -133,6 +133,8 @@ Looking at the correlations of the pollutants with weather, we can see that for 
 
 ### Graph 2: Concentration of some Air Pollutants, Temperature, Humidity over Time
 ``` {r Graph 2}
+
+library(cowplot)
 #create a time stamp with both date and time (might want to move this to earlier section?)
 airq = airq %>% 
   mutate(Date_Time = ymd_hms(paste(airq$Date, airq$Time)))
@@ -140,12 +142,16 @@ airq = airq %>%
 #data preparation: short to long, select pollutants to be included
 airq.long = airq %>%
   #select(Date_Time, `PT08.S1(CO)`, `C6H6(GT)`, `PT08.S2(NMHC)`,`PT08.S3(NOx)`, `PT08.S4(NO2)`, `PT08.S5(O3)`) %>%
-  select(Date_Time, `PT08.S1(CO)`,`C6H6(GT)`, `PT08.S2(NMHC)`, `T`, AH) %>%
+  select(Date_Time, `PT08.S1(CO)`,`C6H6(GT)`, `PT08.S2(NMHC)`) %>%
   gather(key = "Variable", value = "Value", -Date_Time)
 head(airq.long)
 
+weather.long = airq %>%
+  select(Date_Time,`T`, `RH`) %>%
+  gather(key = "Variable", value = "Value", -Date_Time)
+
 #Graph of pollutants' concentration by hours
-airq.long %>% 
+plot_1 <- airq.long %>% 
   drop_na(Value) %>%
   ggplot(aes(x = Date_Time, y = Value)) + 
   geom_line(aes(color = Variable, linetype = Variable)) +
@@ -153,6 +159,19 @@ airq.long %>%
   coord_x_datetime(xlim = c("2005-03-24 01:00:00", "2005-04-04 23:00:00")) +
   xlab("Time") +
   ylab("microg/m^3")
+
+
+plot_2 <- airq %>% 
+  ggplot(aes(x = Date_Time)) + 
+  geom_line(aes(y=T, colour = "Temperature")) +
+  theme_bw() +
+  coord_x_datetime(xlim = c("2005-03-24 01:00:00", "2005-04-04 23:00:00")) +
+  xlab("Time") +
+  ylab("Temperature (Degrees C)") +
+  geom_line(aes(y=RH, colour = "Humidity")) +
+  scale_y_continuous(sec.axis = sec_axis(~., name = "Relative Humidity (%)"))
+
+plot_grid(plot_1, plot_2, ncol=1)
 ```
 
 
