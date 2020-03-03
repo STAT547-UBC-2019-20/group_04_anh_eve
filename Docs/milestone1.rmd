@@ -8,7 +8,7 @@ editor_options:
   chunk_output_type: inline
 ---
 
-```{r libraries}
+```{r libraries, warnings = FALSE, echo= FALSE}
 library(here)
 library(tidyverse)
 library(DT)
@@ -64,7 +64,10 @@ kable(desc.tbl)
 
 ## Exploring the dataset
 
+The dataset is shown below:
+
 ```{r read data}
+# first we read the data in
 airq <- readr::read_csv(here::here("data","airquality.csv"))
 DT::datatable(airq)
 ```
@@ -73,9 +76,15 @@ DT::datatable(airq)
 
 ### Summary Statistics
 
-```{r summary stats}
+The following shows the five-number stats summary for each variable:
+```{r}
 # Five-number summary for each variable
 summary(airq)
+```
+
+The following shows some preliminary info on the air quality dataset that we are using. We record the number of total observations, number of missing observations, percentage of missing values and the number of usable observations. 
+
+```{r summary stats}
 
 # Look at missing values for each variable
 missing = list()
@@ -99,7 +108,7 @@ dfmissing %>%
 
 ```
 
-
+From this we see that for many of the observations less than 4% of the data is missing. This is adequate for the research we are conducting. 
 
 ### Graph 1: Correlogram of pollutants
 ``` {r Graph 1}
@@ -119,11 +128,15 @@ corrplot(airq_corr,
          tl.col = "blue",
          diag = FALSE)
 ```
-
+Looking at the correlations of the pollutants with weather, we can see that for all pollutants except NOx, temperature (T) is positively correlated, although weakly so. This means that higher temperatures correspond to higher concentrations of the gases. Relative humidity (RH) is negatively and correlated to temperature and has a weak negative correlation to the concentrations of pollutants, except NOx. Absolute humidity (AH) has stronger correlations, mostly positive, although, like temperature, it has a negative correlation with NOx. 
 
 
 ### Graph 2: Concentration of some Air Pollutants, Temperature, Humidity over Time
+
+The following plot shows the **hourly** concentrations of some of the pollutants (tin oxide, benzene, and Titania) for a month. Also plotted are temperature and relative humidity.
 ``` {r Graph 2}
+
+library(cowplot)
 #create a time stamp with both date and time (might want to move this to earlier section?)
 airq = airq %>% 
   mutate(Date_Time = ymd_hms(paste(airq$Date, airq$Time)))
@@ -131,12 +144,16 @@ airq = airq %>%
 #data preparation: short to long, select pollutants to be included
 airq.long = airq %>%
   #select(Date_Time, `PT08.S1(CO)`, `C6H6(GT)`, `PT08.S2(NMHC)`,`PT08.S3(NOx)`, `PT08.S4(NO2)`, `PT08.S5(O3)`) %>%
-  select(Date_Time, `PT08.S1(CO)`,`C6H6(GT)`, `PT08.S2(NMHC)`, `T`, AH) %>%
+  select(Date_Time, `PT08.S1(CO)`,`C6H6(GT)`, `PT08.S2(NMHC)`) %>%
   gather(key = "Variable", value = "Value", -Date_Time)
 head(airq.long)
 
+weather.long = airq %>%
+  select(Date_Time,`T`, `RH`) %>%
+  gather(key = "Variable", value = "Value", -Date_Time)
+
 #Graph of pollutants' concentration by hours
-airq.long %>% 
+plot_1 <- airq.long %>% 
   drop_na(Value) %>%
   ggplot(aes(x = Date_Time, y = Value)) + 
   geom_line(aes(color = Variable, linetype = Variable)) +
@@ -144,12 +161,26 @@ airq.long %>%
   coord_x_datetime(xlim = c("2005-03-24 01:00:00", "2005-04-04 23:00:00")) +
   xlab("Time") +
   ylab("microg/m^3")
+
+
+plot_2 <- airq %>% 
+  ggplot(aes(x = Date_Time)) + 
+  geom_line(aes(y=T, colour = "Temperature")) +
+  theme_bw() +
+  coord_x_datetime(xlim = c("2005-03-24 01:00:00", "2005-04-04 23:00:00")) +
+  xlab("Time") +
+  ylab("Temperature (Degrees C)") +
+  geom_line(aes(y=RH, colour = "Humidity")) +
+  scale_y_continuous(sec.axis = sec_axis(~., name = "Relative Humidity (%)"))
+
+plot_grid(plot_1, plot_2, ncol=1)
 ```
 
 
 
 ### Graph 3: Concentration of some Air Pollutants, Temperature, Humidity over Time, daily average
 
+The plots below now show the **daily** averaged concentrations of some of the pollutants (tin oxide, benzene, and Titania) for a year. Also plotted are daily temperature and relative humidity.
 ```{r Graph of Air Pollutant - daily average}
 #Aggregate Daily Average
 airq_daily = airq %>%
@@ -158,13 +189,18 @@ airq_daily = airq %>%
 
 #data preparation: short to long, select pollutants to be included
 airq.lg.d = airq_daily %>%
-  select(Date, `PT08.S1(CO)`, `C6H6(GT)`, `PT08.S2(NMHC)`,`PT08.S3(NOx)`, `PT08.S4(NO2)`, `PT08.S5(O3)`) %>%
-  #select(Date, `PT08.S1(CO)`,`C6H6(GT)`, `PT08.S2(NMHC)`, `T`, AH) %>%
+  #select(Date, `PT08.S1(CO)`, `C6H6(GT)`, `PT08.S2(NMHC)`,`PT08.S3(NOx)`, `PT08.S4(NO2)`, `PT08.S5(O3)`) %>%
+  select(Date, `PT08.S1(CO)`,`C6H6(GT)`, `PT08.S2(NMHC)`) %>% #, `T`, AH) %>%
   gather(key = "Variable", value = "Value", -Date)
 head(airq.lg.d)
 
+weather.dly.long = airq_daily %>%
+  select(Date,`T`, `RH`) %>%
+  gather(key = "Variable", value = "Value", -Date)
+
+
 #Graph of pollutants' concentration by day
-airq.lg.d %>% 
+plot_3 <- airq.lg.d %>% 
   drop_na(Value) %>%
   ggplot(aes(x = Date, y = Value)) + 
   geom_line(aes(color = Variable, linetype = Variable)) +
@@ -173,12 +209,27 @@ airq.lg.d %>%
   xlab("Time") +
   ylab("microg/m^3")
 
+plot_4 <- airq_daily %>% 
+  ggplot(aes(x = Date)) + 
+  geom_line(aes(y=T, colour = "Temperature")) +
+  theme_bw() +
+  #coord_x_datetime(xlim = c("2005-01-04", "2005-04-04")) +
+  xlab("Time") +
+  ylab("Temperature (Degrees C)") +
+  geom_line(aes(y=RH, colour = "Humidity")) +
+  scale_y_continuous(sec.axis = sec_axis(~., name = "Relative Humidity (%)"))
+
+plot_grid(plot_3, plot_4, ncol=1)
+  
+  
+  
 ```
 
 
 
 ### Graph 4: Concentration of some Air Pollutants, Temperature, Humidity over Time, weekly average
 
+We now show the **weekly** averaged concentrations of some of the pollutants (tin oxide, benzene, and Titania) for a year. Also plotted are daily temperature and relative humidity.
 ```{r Graph of Air Pollutant - weekly average}
 #Aggregate Weekly Average
 airq_weekly = airq %>%
@@ -188,13 +239,15 @@ airq_weekly = airq %>%
 
 #data preparation: short to long, select pollutants to be included
 airq.lg.w = airq_weekly %>%
-  select(Week, `PT08.S1(CO)`, `C6H6(GT)`, `PT08.S2(NMHC)`,`PT08.S3(NOx)`, `PT08.S4(NO2)`, `PT08.S5(O3)`) %>%
-  #select(Date, `PT08.S1(CO)`,`C6H6(GT)`, `PT08.S2(NMHC)`, `T`, AH) %>%
+  #select(Week, `PT08.S1(CO)`, `C6H6(GT)`, `PT08.S2(NMHC)`,`PT08.S3(NOx)`, `PT08.S4(NO2)`, `PT08.S5(O3)`) %>%
+  select(Week, `PT08.S1(CO)`,`C6H6(GT)`, `PT08.S2(NMHC)`) %>% #, `T`, AH) %>%
   gather(key = "Variable", value = "Value", -Week)
 head(airq.lg.w)
 
+
+
 #Graph of pollutants' concentration by week
-airq.lg.w %>% 
+plot_5 <- airq.lg.w %>% 
   drop_na(Value) %>%
   ggplot(aes(x = Week, y = Value)) + 
   geom_line(aes(color = Variable, linetype = Variable)) +
@@ -202,12 +255,26 @@ airq.lg.w %>%
   #coord_x_date(xlim = c("2005-01-04", "2005-04-04")) +
   xlab("Time") +
   ylab("microg/m^3")
+
+
+plot_6 <- airq_weekly %>% 
+  ggplot(aes(x = Week)) + 
+  geom_line(aes(y=T, colour = "Temperature")) +
+  theme_bw() +
+  #coord_x_datetime(xlim = c("2005-01-04", "2005-04-04")) +
+  xlab("Time") +
+  ylab("Temperature (Degrees C)") +
+  geom_line(aes(y=RH, colour = "Humidity")) +
+  scale_y_continuous(sec.axis = sec_axis(~., name = "Relative Humidity (%)"))
+
+plot_grid(plot_5, plot_6, ncol=1)
 ```
 
 
 
 ### Graph 5: Concentration of some Air Pollutants, Temperature, Humidity over Time, monthly average
 
+We now show the **monthly** averaged concentrations of some of the pollutants (tin oxide, benzene, and Titania) for a year. Also plotted are daily temperature and relative humidity.
 ```{r Graph of Air Pollutant - monthly average}
 #Aggregate Daily Average
 airq_monthly = airq %>%
@@ -217,9 +284,9 @@ airq_monthly = airq %>%
 
 #data preparation: short to long, select pollutants to be included
 #Graph of pollutants' concentration by month
-airq_monthly %>%
-  select(Month, `PT08.S1(CO)`, `C6H6(GT)`, `PT08.S2(NMHC)`,`PT08.S3(NOx)`, `PT08.S4(NO2)`, `PT08.S5(O3)`) %>%
-  #select(Date, `PT08.S1(CO)`,`C6H6(GT)`, `PT08.S2(NMHC)`, `T`, AH) %>%
+plot_7 <- airq_monthly %>%
+  #select(Month, `PT08.S1(CO)`, `C6H6(GT)`, `PT08.S2(NMHC)`,`PT08.S3(NOx)`, `PT08.S4(NO2)`, `PT08.S5(O3)`) %>%
+  select(Month, `PT08.S1(CO)`,`C6H6(GT)`, `PT08.S2(NMHC)`) %>%  #, `T`, AH) %>%
   gather(key = "Variable", value = "Value", -Month) %>% 
   drop_na(Value) %>%
   ggplot(aes(x = Month, y = Value)) + 
@@ -230,28 +297,27 @@ airq_monthly %>%
   ylab("microg/m^3")
 
 #Graph of temperature and humidity by month
-airq_monthly %>%
-  #select(Month, `PT08.S1(CO)`, `C6H6(GT)`, `PT08.S2(NMHC)`,`PT08.S3(NOx)`, `PT08.S4(NO2)`, `PT08.S5(O3)`) %>%
-  select(Month, `T`, AH, RH) %>%
-  gather(key = "Variable", value = "Value", -Month) %>% 
-  drop_na(Value) %>%
-  ggplot(aes(x = Month, y = Value)) + 
-  geom_line(aes(color = Variable, linetype = Variable)) +
+
+plot_8 <- airq_monthly %>% 
+  ggplot(aes(x = Month)) + 
+  geom_line(aes(y=T, colour = "Temperature")) +
   theme_bw() +
-  #coord_x_date(xlim = c("2005-01-04", "2005-04-04")) +
+  #coord_x_datetime(xlim = c("2005-01-04", "2005-04-04")) +
   xlab("Time") +
-  ylab("microg/m^3")
+  ylab("Temperature (Degrees C)") +
+  geom_line(aes(y=RH, colour = "Humidity")) +
+  scale_y_continuous(sec.axis = sec_axis(~., name = "Relative Humidity (%)"))
 
-
+plot_grid(plot_7, plot_8, ncol=1)
 ```
 
 
 
 ## Research question
-In this analysis, we will attempt to determine the (seasonal?) effects of temperature and humidity on the concentration of air pollutants.
+In this analysis, we will attempt to determine the effects of temperature and humidity on the concentration of air pollutants.
 
 ## Plan of action
-With our research question, we are interested in the hourly averaged (?) concentrations of air pollutants, temperature and humidity. We will ignore variables which have too many missing data to increase the precision of this analysis. After dealing with the missing data, we will perform a linear regression analysis using OLS (ordinary least square) method. Coefficients of relevant variables will be plotted with confidence intervals.
+With our research question, we are interested in the hourly averaged concentrations of air pollutants, temperature and humidity. We will ignore variables which have too many missing data to increase the precision of this analysis. After dealing with the missing data, we will perform a linear regression analysis using OLS (ordinary least square) method. Coefficients of relevant variables will be plotted with confidence intervals.
 
 ## References
 
