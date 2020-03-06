@@ -8,14 +8,17 @@ This script will read in our dataset from a URL argument and save it to a csv fi
 Returns loaded data as a tibble. 
 
 Usage: load_data.R --url=<url> --outfilename=<outfilename>
-"
+" -> doc
 
 library(here)
 library(tidyverse)
 library(glue)
 library(tidyr)
+library(docopt)
 
-main <- function(url){
+opt <- docopt(doc)
+
+main <- function(url, outfilename){
   
   data_url <- url
   path <- here::here("data", glue::glue(outfilename, ".csv"))
@@ -24,17 +27,19 @@ main <- function(url){
   
   data <- readr::read_csv(path)
   
-  print("Reading data from ", url, " and saving to ", glue::glue(outfilename, ".csv"))
+  print(glue::glue("Reading data from ", url, " and saving to ", outfilename, ".csv"))
   
-  return(data)
+  #return(data)
   
 }
 
 #
 # data_url <- "https://raw.githubusercontent.com/STAT547-UBC-2019-20/data_sets/master/airquality.csv"
-
+# example: run like this:
+# Rscript load_data.R --url="https://raw.githubusercontent.com/STAT547-UBC-2019-20/data_sets/master/airquality.csv" --outfilename="aq"
 
 ### tests?
 # could test that inputs are strings
 
 main(opt$url, opt$outfilename)
+
