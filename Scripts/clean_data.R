@@ -6,7 +6,7 @@
 "
 
 
-Usage: clean_data.R --data=<data> --outfilename=<outfilename>
+Usage: clean_data.R --path=<path> --datafilename=<datafilename> --outfilename=<outfilename>
 " -> doc
 
 # load libraries
@@ -15,6 +15,7 @@ library(tidyverse)
 library(glue)
 library(tidyr)
 library(docopt)
+library(lubridate) 
 
 
 
@@ -22,7 +23,8 @@ opt <- docopt(doc)
 
 
 
-main <- function(data, outfilenames){
+main <- function(path , datafilename, outfilename){
+  data <- readr::read_csv(here::here(glue::glue(path, datafilename)))
   #convert Missing Values (tagged with -200 value) to NA
   data[data == -200] = NA 
   # Convert numeric columns to 'double' type
@@ -31,6 +33,10 @@ main <- function(data, outfilenames){
     mutate(Date_Time = ymd_hms(paste(data$Date, data$Time)))
   
   #save as csv
+  readr::write_csv(data, here::here(glue::glue(path, outfilename,".csv")))
+  
+  print(glue::glue("Reading data from ", path, datafilename, 
+                   " cleaning, and saving to ", outfilename, ".csv"))
   
 }
 
@@ -38,7 +44,7 @@ main <- function(data, outfilenames){
 
 
 
-main(opt$data, opt$outfilename)
+main(opt$path, opt$datafilename, opt$outfilename)
 
 # Round the values to 2 decimal places
 #for correlation plot
