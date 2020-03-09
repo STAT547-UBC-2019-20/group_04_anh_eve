@@ -23,7 +23,7 @@ In our project we use air quality data from [the UPI Machine Learning Repository
 3. Run the following scripts (in order)
 
 - load_data.R
-Rscript load_data.R --url="https://raw.githubusercontent.com/STAT547-UBC-2019-20/data_sets/master/airquality.csv" --outfilename="aq"
+Rscript load_data.R --url="https://raw.githubusercontent.com/STAT547-UBC-2019-20/data_sets/master/airquality.csv" --outfilename="aq.csv"
 
 - clean_data.R
 Rscript clean_data.R --data_dir="data" --datafilename="orig_aq.csv" --outfilename="aq.csv"
