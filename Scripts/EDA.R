@@ -2,31 +2,45 @@
 # Eve Wicksteed and Anh Le
 
 # script to create and save plots
+# Description of the script and the command-line arguments
+"
+This script conducts exploratory data analysis using the cleaned data. The plots are saved to Image folder.
 
-# create diff functions for each plot
+Usage: EDA.R --path=<path> --datafilename=<datafilename>
+" -> doc
 
-### NEED TO CREATE ONE MAIN FUNCTION TO CALL ALL PLOT FUNCTIONS
-### NEED TO SAVE PLOTS TO PLOT DIRECTORY
+library(here)
+library(tidyverse)
+library(DT)
+library(knitr)
+library(lubridate) 
+library(tidyquant)
+library(corrplot)
+library(cowplot)
+library(docopt)
 
-# correlation plot
-corr_plot <- function(data){
-  corr_data <- cor(data[3:15], use = "complete.obs")
+opt <- docopt(doc)
+
+main <- function(path, datafilename){
   
-  # Round the values to 2 decimal places
-  corr_data <- round(corr_data,2)
-  corrplot(corr_data, 
-           type="upper", 
+  data <- readr::read_csv(here::here(glue::glue(path, datafilename)))
+  
+  # correlation plot
+  data %>% 
+    select(c(3:12)) %>% 
+    cor(use = "complete.obs") %>%
+    round(2) %>%
+    corrplot(type="upper", 
            method="color",
            tl.srt=45, 
            tl.col = "blue",
            diag = FALSE)
   
-}
-
-
-
-# daily pollutants vs. time
-aq_time_plot <- function(data){
+  ggsave(filename = "Images/corrplot.png", device = 'png')
+  
+  
+  # daily pollutants vs. time
+  aq_time_plot <- function(data){
   
   #Aggregate Daily Average
   airq_daily <- data %>%
@@ -47,12 +61,13 @@ aq_time_plot <- function(data){
     xlab("Time") +
     ylab("microg/m^3")+
     ggtitle("Pollutant variation with time")
-}
-
-
-
-# daily weather vs. time
-weather_time_plot <- function(data){
+  }
+  
+  ggsave(filename = "Images/pollutantsvstime.png", device = 'png')
+  
+  
+  # daily weather vs. time
+  weather_time_plot <- function(data){
   
   #Aggregate Daily Average
   airq_daily <- data %>%
@@ -73,24 +88,39 @@ weather_time_plot <- function(data){
     geom_line(aes(y=RH, colour = "Humidity")) +
     scale_y_continuous(sec.axis = sec_axis(~., name = "Relative Humidity (%)")) +
     ggtitle("Weather variation with time")
+  }
+  
+  ggsave(filename = "Images/weathervstime.png", device = 'png')
   
   
-}
-
-
-
-# Plot of temp vs. benzene
-plot_temp_benzene <- function(data){
-  airq_daily <- data %>%
+  # Plot of temp vs. benzene
+  plot_temp_benzene <- function(data){
+    
+    #Aggregate Daily Average
+    airq_daily <- data %>%
     group_by(Date) %>%
-    summarise_all(funs(mean), na.rm = TRUE)
+    summarise_all(funs(mean), na.rm = TRUE) %>%
+    select(Date,`T`, `RH`, `C6H6(GT)`) %>%
+    
+    #plot
+    ggplot(aes(x = Date)) + 
+    geom_line(aes(y=T, colour = "Temperature")) +
+    theme_bw() +
+    #coord_x_datetime(xlim = c("2005-01-04", "2005-04-04")) +
+    xlab("Time") +
+    ylab("Temperature (Degrees C)") +
+    geom_line(aes(y=RH, colour = "Humidity")) +
+    scale_y_continuous(sec.axis = sec_axis(~., name = "Relative Humidity (%)"))
+  }
   
-  data.long <- airq_daily %>%
-    select(Date,`T`, `RH`)
+  ggsave(filename = "Images/tempvsbenzene.png", device = 'png')
   
-  ### NEED TO COMPLETE THIS PLOT
-}
+  
+  print("The script completed successfully")
+  
+  }
 
+main(opt$path, opt$datafilename)
 
 
 
