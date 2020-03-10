@@ -13,7 +13,8 @@ You can fine the link to our project for milestone 2 [here](https://stat547-ubc-
 
 ## Usage:
 
-1. Clone this repo
+1. Clone this repo:
+  `git clone https://github.com/STAT547-UBC-2019-20/group_04_anh_eve.git`
 
 2. Ensure the following packages are installed:
 - here
@@ -29,15 +30,15 @@ You can fine the link to our project for milestone 2 [here](https://stat547-ubc-
 
 - load_data.R
 
-  Rscript Scripts/load_data.R --url="https://raw.githubusercontent.com/STAT547-UBC-2019-20/data_sets/master/airquality.csv" --outfilename="aq.csv"
+ `Rscript Scripts/load_data.R --url="https://raw.githubusercontent.com/STAT547-UBC-2019-20/data_sets/master/airquality.csv" --outfilename="aq.csv"`
 
 - clean_data.R
 
-Rscript Scripts/clean_data.R --path="Data/" --datafilename="aq.csv" —outfilename="outfilename"
+  `Rscript Scripts/clean_data.R --data_dir="Data" --infilename="aq.csv" --outfilename="clean_aq.csv"`
 
 - EDA.R
 
-Rscript Scripts/EDA.R --path="Data/" --datafilename="aq.csv"
+  `Rscript Scripts/EDA.R --path="Data/" --datafilename="aq.csv"`
 
 
 
