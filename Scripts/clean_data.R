@@ -38,7 +38,7 @@ main <- function(data_dir, infilename, outfilename){
   # change col names:
   newnames <- c("Date", "Time", "CO", "Tin_oxide", "Hydro_carbons", "Benzene", 
                 "Titania", "NOx", "Tungsten_oxide_NOx", "NO2", "Tungsten_oxide_NO2", 
-                "Indium_oxide", "Temp", "RH", "AH")
+                "Indium_oxide", "Temp", "RH", "AH", "Data_time")
   
   for (i in 1:ncol(data)){
     names(data)[i]=newnames[i]
