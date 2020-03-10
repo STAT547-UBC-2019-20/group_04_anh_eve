@@ -29,7 +29,7 @@ You can fine the link to our project for milestone 2 [here](https://stat547-ubc-
 
 - load_data.R
 
-Rscript Scripts/load_data.R --url="https://raw.githubusercontent.com/STAT547-UBC-2019-20/data_sets/master/airquality.csv" --outfilename="aq.csv"
+  Rscript Scripts/load_data.R --url="https://raw.githubusercontent.com/STAT547-UBC-2019-20/data_sets/master/airquality.csv" --outfilename="aq.csv"
 
 - clean_data.R
 
