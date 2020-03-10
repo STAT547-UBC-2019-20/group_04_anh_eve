@@ -92,21 +92,14 @@ main <- function(data_dir, datafilename){
   
   
   #### TEMP VS BENZENE
-    
-    #Aggregate Daily Average
-    # airq_daily <- data %>%
-    # group_by(Date) %>%
-    # summarise_all(funs(mean), na.rm = TRUE) %>%
-    # select(Date,`T`, `RH`, Benzene) %>%
-    
-    #plot
+
   plot_bz_w_time <- data %>% 
     ggplot() + 
     geom_point(aes(y=Benzene, x=Temp)) +
     theme_bw() +
     xlab("Temperature (Degrees C)") +
     ylab("Benzene concentration (microg/m^3")+
-    ggtitle("Benzene variation with temperature")
+    ggtitle("Benzene concentration variation with temperature")
 
   ggsave(filename = "Images/tempvsbenzene.png", device = 'png', width=9, height=5)
   
