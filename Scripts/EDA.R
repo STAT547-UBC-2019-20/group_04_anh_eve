@@ -30,7 +30,7 @@ main <- function(data_dir, datafilename){
   # set up graphics device
   png(filename="Images/correlation.png")
   data %>% 
-    select(c(3:12)) %>% 
+    select(c(3:15)) %>% 
     cor(use = "complete.obs") %>%
     round(2) %>%
     corrplot(type="upper", 
@@ -100,12 +100,13 @@ main <- function(data_dir, datafilename){
     # select(Date,`T`, `RH`, Benzene) %>%
     
     #plot
-  airq_daily %>% 
+  plot_bz_w_time <- data %>% 
     ggplot() + 
-    geom_line(aes(y=Benzene, x=Temp)) +
+    geom_point(aes(y=Benzene, x=Temp)) +
     theme_bw() +
-    xlab("Temperature (Degrees C") +
-    ylab("Benzene concentration (microg/m^3")
+    xlab("Temperature (Degrees C)") +
+    ylab("Benzene concentration (microg/m^3")+
+    ggtitle("Benzene variation with temperature")
 
   ggsave(filename = "Images/tempvsbenzene.png", device = 'png', width=9, height=5)
   
