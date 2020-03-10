@@ -7,6 +7,10 @@ In our project we use air quality data from [the UPI Machine Learning Repository
 
 
 
+# Milestone 2 - Air quality data exploration
+
+You can fine the link to our project for milestone 2 [here](https://stat547-ubc-2019-20.github.io/group_04_anh_eve/Docs/milestone1.html)
+
 ## Usage:
 
 1. Clone this repo
@@ -21,7 +25,6 @@ In our project we use air quality data from [the UPI Machine Learning Repository
 - corrplot
 - cowplot
 
-# Milestone 2 - Air quality data exploration
 3. Run the following scripts (in order)
 
 - load_data.R
