@@ -6,6 +6,7 @@ You can find the link to our report for milestone 1 [here](https://stat547-ubc-2
 In our project we use air quality data from [the UPI Machine Learning Repository](https://archive.ics.uci.edu/ml/datasets/Air+Quality).
 
 
+
 ## Usage:
 
 1. Clone this repo
@@ -20,6 +21,7 @@ In our project we use air quality data from [the UPI Machine Learning Repository
 - corrplot
 - cowplot
 
+# Milestone 2 - Air quality data exploration
 3. Run the following scripts (in order)
 
 - load_data.R
@@ -29,7 +31,7 @@ Rscript load_data.R --url="https://raw.githubusercontent.com/STAT547-UBC-2019-20
 Rscript clean_data.R --data_dir="data" --datafilename="orig_aq.csv" --outfilename="aq.csv"
 
 - EDA.R
-
+Rscript Scripts/EDA.R --path=Data/ --datafilename=aq.csv
 
 
 
