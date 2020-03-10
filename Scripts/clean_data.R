@@ -4,9 +4,10 @@
 # script to clean data
 
 "
+This scripts replaces missing values (-200) with NA, creates a date/time column and saves the data to
+a modified .csv file.
 
-
-Usage: clean_data.R --data_dir=<data_dir> --infilename=<infilename> --outfilename=<outfilename>
+Usage: Scripts/clean_data.R --data_dir=<data_dir> --infilename=<infilename> --outfilename=<outfilename>
 " -> doc
 
 # load libraries
