@@ -26,13 +26,14 @@ In our project we use air quality data from [the UPI Machine Learning Repository
 
 - load_data.R
 
-Rscript load_data.R --url="https://raw.githubusercontent.com/STAT547-UBC-2019-20/data_sets/master/airquality.csv" --outfilename="aq.csv"
+Rscript Scripts/load_data.R --url="https://raw.githubusercontent.com/STAT547-UBC-2019-20/data_sets/master/airquality.csv" --outfilename="aq.csv"
 
 - clean_data.R
 
-Rscript Scripts/clean_data.R --path=Data/ --datafilename=aq.csv —outfilename=outfilename
+Rscript Scripts/clean_data.R --path="Data/" --datafilename="aq.csv" —outfilename="outfilename"
 
 - EDA.R
+
 Rscript Scripts/EDA.R --path="Data/" --datafilename="aq.csv"
 
 
