@@ -25,7 +25,7 @@ main <- function(path, datafilename){
   
   data <- readr::read_csv(here::here(glue::glue(path, datafilename)))
   
-  # correlation plot
+  #1. correlation plot
   data %>% 
     select(c(3:12)) %>% 
     cor(use = "complete.obs") %>%
@@ -39,9 +39,7 @@ main <- function(path, datafilename){
   ggsave(filename = "Images/corrplot.png", device = 'png')
   
   
-  # daily pollutants vs. time
-  aq_time_plot <- function(data){
-  
+  #2. daily pollutants vs. time
   #Aggregate Daily Average
   airq_daily <- data %>%
     group_by(Date) %>%
@@ -52,7 +50,7 @@ main <- function(path, datafilename){
     select(Date, `PT08.S1(CO)`,`C6H6(GT)`, `PT08.S2(NMHC)`) %>% 
     gather(key = "Variable", value = "Value", -Date)
 
-  plot_aq_w_time <- airq.lg.d %>% 
+  airq.lg.d %>% 
     drop_na(Value) %>%
     ggplot(aes(x = Date, y = Value)) + 
     geom_line(aes(color = Variable, linetype = Variable)) +
@@ -61,24 +59,18 @@ main <- function(path, datafilename){
     xlab("Time") +
     ylab("microg/m^3")+
     ggtitle("Pollutant variation with time")
-  }
+
   
   ggsave(filename = "Images/pollutantsvstime.png", device = 'png')
   
   
-  # daily weather vs. time
-  weather_time_plot <- function(data){
-  
-  #Aggregate Daily Average
-  airq_daily <- data %>%
-    group_by(Date) %>%
-    summarise_all(funs(mean), na.rm = TRUE)
-  
+  #3. daily weather vs. time
+
   weather.dly.long <- airq_daily %>%
     select(Date,`T`, `RH`) %>%
     gather(key = "Variable", value = "Value", -Date)
   
-  plot_wx_w_time <- airq_daily %>% 
+  airq_daily %>% 
     ggplot(aes(x = Date)) + 
     geom_line(aes(y=T, colour = "Temperature")) +
     theme_bw() +
@@ -88,22 +80,16 @@ main <- function(path, datafilename){
     geom_line(aes(y=RH, colour = "Humidity")) +
     scale_y_continuous(sec.axis = sec_axis(~., name = "Relative Humidity (%)")) +
     ggtitle("Weather variation with time")
-  }
+
   
   ggsave(filename = "Images/weathervstime.png", device = 'png')
   
   
-  # Plot of temp vs. benzene
-  plot_temp_benzene <- function(data){
-    
-    #Aggregate Daily Average
-    airq_daily <- data %>%
-    group_by(Date) %>%
-    summarise_all(funs(mean), na.rm = TRUE) %>%
+  #4. Plot of temp vs. benzene
+   #Aggregate Daily Average
+    airq_daily %>%
     select(Date,`T`, `RH`, `C6H6(GT)`) %>%
-    
-    #plot
-    ggplot(aes(x = Date)) + 
+    ggplot(aes(x = Date)) +  #plot
     geom_line(aes(y=T, colour = "Temperature")) +
     theme_bw() +
     #coord_x_datetime(xlim = c("2005-01-04", "2005-04-04")) +
@@ -111,7 +97,6 @@ main <- function(path, datafilename){
     ylab("Temperature (Degrees C)") +
     geom_line(aes(y=RH, colour = "Humidity")) +
     scale_y_continuous(sec.axis = sec_axis(~., name = "Relative Humidity (%)"))
-  }
   
   ggsave(filename = "Images/tempvsbenzene.png", device = 'png')
   
