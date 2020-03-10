@@ -9,7 +9,7 @@ In our project we use air quality data from [the UPI Machine Learning Repository
 
 # Milestone 2 - Air quality data exploration
 
-You can fine the link to our project for milestone 2 [here](https://stat547-ubc-2019-20.github.io/group_04_anh_eve/Docs/milestone1.html)
+You can find the link to our project for milestone 2 [here](https://stat547-ubc-2019-20.github.io/group_04_anh_eve/Docs/milestone2.html)
 
 ## Usage:
 
