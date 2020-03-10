@@ -6,7 +6,7 @@
 "
 
 
-Usage: clean_data.R --path=<path> --datafilename=<datafilename> --outfilename=<outfilename>
+Usage: clean_data.R --data_dir=<data_dir> --infilename=<infilename> --outfilename=<outfilename>
 " -> doc
 
 # load libraries
@@ -23,8 +23,8 @@ opt <- docopt(doc)
 
 
 
-main <- function(path , datafilename, outfilename){
-  data <- readr::read_csv(here::here(glue::glue(path, datafilename)))
+main <- function(data_dir, infilename, outfilename){
+  data <- readr::read_csv(here::here(data_dir, infilename))
   #convert Missing Values (tagged with -200 value) to NA
   data[data == -200] = NA 
   # Convert numeric columns to 'double' type
@@ -33,18 +33,18 @@ main <- function(path , datafilename, outfilename){
     mutate(Date_Time = ymd_hms(paste(data$Date, data$Time)))
   
   #save as csv
-  readr::write_csv(data, here::here(glue::glue(path, outfilename,".csv")))
+  readr::write_csv(data, here::here(data_dir, outfilename))
   
-  print(glue::glue("Reading data from ", path, datafilename, 
-                   " cleaning, and saving to ", outfilename, ".csv"))
+  print(glue::glue("Reading data from ", data_dir, "/", infilename, 
+                   " cleaning, and saving to ", outfilename))
   
 }
 
 
+main(opt$data_dir, opt$infilename, opt$outfilename)
 
-
-
-main(opt$path, opt$datafilename, opt$outfilename)
+#example of how to run:
+# Rscript Scripts/clean_data.R --data_dir="Data" --infilename="aq.csv" --outfilename="clean_aq.csv"
 
 # Round the values to 2 decimal places
 #for correlation plot
