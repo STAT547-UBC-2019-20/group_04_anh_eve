@@ -38,7 +38,7 @@ You can fine the link to our project for milestone 2 [here](https://stat547-ubc-
 
 - EDA.R
 
-  `Rscript Scripts/EDA.R --path="Data/" --datafilename="aq.csv"`
+  `Rscript Scripts/EDA.R --data_dir="Data" --datafilename="clean_aq.csv"`
 
 
 
