@@ -27,7 +27,7 @@ main <- function(path, datafilename){
   
   # correlation plot
   data %>% 
-    select(c(3:15)) %>% 
+    select(c(3:12)) %>% 
     cor(use = "complete.obs") %>%
     round(2) %>%
     corrplot(type="upper", 
