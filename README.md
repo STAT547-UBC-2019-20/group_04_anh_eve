@@ -30,7 +30,7 @@ Rscript load_data.R --url="https://raw.githubusercontent.com/STAT547-UBC-2019-20
 
 - clean_data.R
 
-Rscript clean_data.R --data_dir="data" --datafilename="orig_aq.csv" --outfilename="aq.csv"
+Rscript Scripts/clean_data.R --path=Data/ --datafilename=aq.csv —outfilename=outfilename
 
 - EDA.R
 
