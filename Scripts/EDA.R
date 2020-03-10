@@ -36,7 +36,7 @@ main <- function(path, datafilename){
            tl.col = "blue",
            diag = FALSE)
   
-  ggsave(filename = "Images/corrplot.png", device = 'png')
+  ggsave(filename = "Images/corrplot.png", device = 'png', width=9, height=5)
   
   
   # daily pollutants vs. time
@@ -63,7 +63,8 @@ main <- function(path, datafilename){
     ggtitle("Pollutant variation with time")
   }
   
-  ggsave(filename = "Images/pollutantsvstime.png", device = 'png')
+  aq_time_plot(data)
+  ggsave(filename = "Images/pollutantsvstime.png", device = 'png', width=9, height=5)
   
   
   # daily weather vs. time
@@ -90,7 +91,8 @@ main <- function(path, datafilename){
     ggtitle("Weather variation with time")
   }
   
-  ggsave(filename = "Images/weathervstime.png", device = 'png')
+  weather_time_plot(data)
+  ggsave(filename = "Images/weathervstime.png", device = 'png', width=9, height=5)
   
   
   # Plot of temp vs. benzene
@@ -113,7 +115,8 @@ main <- function(path, datafilename){
     scale_y_continuous(sec.axis = sec_axis(~., name = "Relative Humidity (%)"))
   }
   
-  ggsave(filename = "Images/tempvsbenzene.png", device = 'png')
+  plot_temp_benzene(data)
+  ggsave(filename = "Images/tempvsbenzene.png", device = 'png', width=9, height=5)
   
   
   print("The script completed successfully")
