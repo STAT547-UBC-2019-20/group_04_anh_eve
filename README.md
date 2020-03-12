@@ -29,12 +29,19 @@ You can find the link to our project for milestone 2 [here](https://stat547-ubc-
 3. Run the following scripts (in order)
 
 - load_data.R
+<<<<<<< HEAD
+Rscript Scripts/load_data.R --url="https://raw.githubusercontent.com/STAT547-UBC-2019-20/data_sets/master/airquality.csv" --outfilename="aq.csv"
+
+- clean_data.R
+Rscript Scripts/clean_data.R --path=Data/ --datafilename=aq.csv --outfilename=outfilename
+=======
 
   `Rscript Scripts/load_data.R --url="https://raw.githubusercontent.com/STAT547-UBC-2019-20/data_sets/master/airquality.csv" -- outfilename="aq.csv"`
 
 - clean_data.R
 
   `Rscript Scripts/clean_data.R --data_dir="Data" --infilename="aq.csv" --outfilename="clean_aq.csv"`
+>>>>>>> upstream/master
 
 - EDA.R
 
