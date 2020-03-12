@@ -15,8 +15,8 @@ Images/correlation.png Images/pollutantsvstime.png Images/weathervstime.png Imag
 	Rscript Scripts/EDA.R --data_dir="Data" --datafilename="clean_aq.csv"
 
 # Knit report
-docs/finalreport.html docs/finalreport.pdf : images/barplot.png images/correlation.png images/propbarplot.png docs/finalreport.Rmd data/autism_cleaned.csv src/knit.R docs/asd_refs.bib
-	Rscript src/knit.R --finalreport="docs/finalreport.Rmd"
+docs/finalreport.html docs/finalreport.pdf : Images/correlation.png Images/pollutantsvstime.png Images/weathervstime.png Images/tempvsbenzene.png Docs/finalreport.Rmd Data/clean_aq.csv Scripts/Knit.R Docs/refs.bib
+	Rscript Scripts/Knit.R --finalreport="docs/finalreport.Rmd"
 
 # Phony target. Delete all files in data and images, leaving the script (delete .md and .html in docs). 
 clean :
