@@ -1,0 +1,29 @@
+# author: Anh Le
+# date: Mar 12 2020
+# makefile for Group4 STAT 547
+
+# download data
+aq.csv : Scripts/load_data.R
+	load_data.R Rscript Scripts/load_data.R --url="https://raw.githubusercontent.com/STAT547-UBC-2019-20/data_sets/master/airquality.csv" --outfilename="aq.csv"
+
+# clean data
+clean_aq.csv : Scripts/clean_data.R data/clean_data.csv
+	Rscript Scripts/clean_data.R --data_dir="Data" --infilename="aq.csv" --outfilename="clean_aq.csv"
+
+# EDA
+Images/correlation.png Images/pollutantsvstime.png Images/weathervstime.png Images/tempvsbenzene.png : EDA.R Data/clean_aq.csv
+	Rscript Scripts/EDA.R --data_dir="Data" --datafilename="clean_aq.csv"
+
+# Knit report
+docs/finalreport.html docs/finalreport.pdf : images/barplot.png images/correlation.png images/propbarplot.png docs/finalreport.Rmd data/autism_cleaned.csv src/knit.R docs/asd_refs.bib
+	Rscript src/knit.R --finalreport="docs/finalreport.Rmd"
+
+# Phony target. Delete all files in data and images, leaving the script (delete .md and .html in docs). 
+clean :
+	rm -f Data/*
+	rm -f Images/*
+	rm -f Docs/*.md
+	rm -f Docs/*.html
+
+# Phony target. all is going to be a target, and its dependencies will be the final outputs of our data analysis pipeline. 
+all: Docs/finalreport.html Docs/finalreport.pdf
