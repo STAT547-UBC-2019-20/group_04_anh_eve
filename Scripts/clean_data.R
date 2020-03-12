@@ -4,9 +4,10 @@
 # script to clean data
 
 "
+This scripts replaces missing values (-200) with NA, creates a date/time column and saves the data to
+a modified .csv file.
 
-
-Usage: clean_data.R --path=<path> --datafilename=<datafilename> --outfilename=<outfilename>
+Usage: Scripts/clean_data.R --data_dir=<data_dir> --infilename=<infilename> --outfilename=<outfilename>
 " -> doc
 
 # load libraries
@@ -23,8 +24,10 @@ opt <- docopt(doc)
 
 
 
-main <- function(path , datafilename, outfilename){
-  data <- readr::read_csv(here::here(glue::glue(path, datafilename)))
+main <- function(data_dir, infilename, outfilename){
+  # read in data
+  data <- readr::read_csv(here::here(data_dir, infilename))
+  
   #convert Missing Values (tagged with -200 value) to NA
   data[data == -200] = NA 
   # Convert numeric columns to 'double' type
@@ -32,19 +35,29 @@ main <- function(path , datafilename, outfilename){
   data = data %>% 
     mutate(Date_Time = ymd_hms(paste(data$Date, data$Time)))
   
-  #save as csv
-  readr::write_csv(data, here::here(glue::glue(path, outfilename,".csv")))
+  # change col names:
+  newnames <- c("Date", "Time", "CO", "Tin_oxide", "Hydro_carbons", "Benzene", 
+                "Titania", "NOx", "Tungsten_oxide_NOx", "NO2", "Tungsten_oxide_NO2", 
+                "Indium_oxide", "Temp", "RH", "AH", "Date_time")
   
-  print(glue::glue("Reading data from ", path, datafilename, 
-                   " cleaning, and saving to ", outfilename, ".csv"))
+  for (i in 1:ncol(data)){
+    names(data)[i]=newnames[i]
+  }
+  
+  
+  #save as csv
+  readr::write_csv(data, here::here(data_dir, outfilename))
+  
+  print(glue::glue("Reading data from ", data_dir, "/", infilename, 
+                   " cleaning, and saving to ", outfilename))
   
 }
 
 
+main(opt$data_dir, opt$infilename, opt$outfilename)
 
-
-
-main(opt$path, opt$datafilename, opt$outfilename)
+#example of how to run:
+# Rscript Scripts/clean_data.R --data_dir="Data" --infilename="aq.csv" --outfilename="clean_aq.csv"
 
 # Round the values to 2 decimal places
 #for correlation plot
