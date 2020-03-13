@@ -45,6 +45,9 @@ You can find the link to our project for milestone 2 [here](https://stat547-ubc-
 - LinearRegression.R
 
   `Rscript Scripts/EDA.R --data_dir="Data" --datafilename="clean_aq.csv"`
+  
+- Knit.R
+  `Rscript Scripts/Knit.R --docdir="Docs" --finalreport="milestone2.rmd"`
 
 
 
