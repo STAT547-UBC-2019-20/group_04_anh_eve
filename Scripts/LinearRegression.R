@@ -35,42 +35,45 @@ main <- function(path, datafilename){
   
   
   ##### Aggregate Daily Average
-  airq_daily = airq %>%
+  airq_daily = data %>%
     group_by(Date) %>%
     summarise_all(funs(mean), na.rm = TRUE)
   
+  ##### Regressions for ALL chemicals
+  regressions = airq_daily %>% 
+    select(-c(Date, Time, Date_time, Temp, RH, AH )) %>%  # leave only dependent variables
+    map(~lm(.x ~  Temp + AH, data = airq_daily)) %>% 
+    map(tidy) 
   
-  ##### REGRESSIONs
+  ##### Export your model object to an RDS file
   
-  #Fit benzene against temperature & humidity (relative humidity is correlated to temperature) 
-  Benzene = lm(`C6H6(GT)` ~ T + AH, data = airq_daily)
-  #save RDS file
-  saveRDS(Benzene, file = "Benzene.rds")
-  tidy(Benzene)
+  chemnames <- c("CO", "Tin_oxide", "Hydro_carbons", "Benzene", 
+                "Titania", "NOx", "Tungsten_oxide_NOx", "NO2", "Tungsten_oxide_NO2", 
+                "Indium_oxide")
   
-  #Fit titania against temperature & humidity 
-  Titania = lm(`PT08.S2(NMHC)` ~ T + AH, data = airq_daily)
-  #save RDS file
-  saveRDS(Titania, file = "Titania.rds")
-  tidy(Titania)
-  
-  #Fit tin oxide against temperature & humidity 
-  Tinoxide= lm(`PT08.S1(CO)` ~ T + AH, data = airq_daily)
-  #save RDS file
-  saveRDS(Tinoxide, file = "Tinoxide.rds")
-  tidy(Tinoxide)
+  for (i in 1:length(regressions)) {
+    assign(chemnames[[i]], regressions[[i]])
+    saveRDS(regressions[[i]], file = paste("Data/",chemnames[[i]]), sep = "")
+  }
   
   
   ##### COEFFICIENTS PLOTS
   
-  threeM <- rbind(tidy(Benzene) %>% mutate(model = "Benzene"), 
-                  tidy(Titania) %>% mutate(model = "Titania"), 
-                  tidy(Tinoxide) %>% mutate(model = "Tin oxide")) %>% 
+  chemModels <- rbind(CO %>% mutate(model = "CO"), 
+                      Tin_oxide %>% mutate(model = "Tin Oxide"),
+                      Hydro_carbons %>% mutate(model = "Hydro Carbons"),
+                      Benzene %>% mutate(model = "Benzene"), 
+                      Titania %>% mutate(model = "Titania"), 
+                      NOx %>% mutate(model = "NOx"), 
+                      Tungsten_oxide_NOx %>% mutate(model = "Tungsten Oxide NOx"), 
+                      NO2 %>% mutate(model = "NO2"),
+                      Tungsten_oxide_NO2 %>% mutate(model = "Tungsten Oxide NO2"), 
+                      Indium_oxide %>% mutate(model = "Indium Oxide")) %>% 
     relabel_predictors(c("(Intercept)" = "Intercept",
-                         T = "Temperature",
+                         Temp = "Temperature",
                          AH = "Absolute Humidity"))
   
-  small_multiple(threeM) +
+  small_multiple(chemModels) +
     theme_bw() + 
     xlab("") +
     ylab("") +
@@ -81,7 +84,7 @@ main <- function(path, datafilename){
           legend.title = element_blank(),
           legend.key.size = unit(15, "pt"))
   
-  ggsave("Images/CoefPlot_Group4.png", device = 'png', width = 7, height = 7, units = "in")
+  ggsave("Images/CoefPlot_Group4.png", device = 'png', width = 15, height = 10, units = "in")
   
 }
 
