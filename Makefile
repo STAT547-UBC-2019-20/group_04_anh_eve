@@ -21,7 +21,7 @@ Data/Tungsten_oxide_NOx.rds, Data/NO2.rds, Data/Tungsten_oxide_NO2.rds, Data/Ind
 
 # Knit report
 docs/finalreport.html docs/finalreport.pdf : Images/correlation.png Images/pollutantsvstime.png Images/weathervstime.png Images/tempvsbenzene.png Docs/finalreport.Rmd Data/clean_aq.csv Scripts/Knit.R Docs/refs.bib
-	Rscript Scripts/Knit.R --finalreport="docs/finalreport.Rmd"
+	Rscript Scripts/Knit.R --docdir="Docs" --finalreport="milestone2.rmd"
 
 # Phony target. Delete all files in data and images, leaving the script (delete .md and .html in docs). 
 clean :
