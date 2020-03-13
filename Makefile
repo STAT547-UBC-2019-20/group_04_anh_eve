@@ -13,6 +13,11 @@ clean_aq.csv : Scripts/clean_data.R data/clean_data.csv
 # EDA
 Images/correlation.png Images/pollutantsvstime.png Images/weathervstime.png Images/tempvsbenzene.png : EDA.R Data/clean_aq.csv
 	Rscript Scripts/EDA.R --data_dir="Data" --datafilename="clean_aq.csv"
+	
+# LinearRegression
+Images/CoefPlot_Group4.png CO.rds, Tin_oxide.rds, Hydro_carbons.rds, Benzene.rds, Titania.rds, NOx.rds, Tungsten_oxide_NOx.rds, NO2.rds, Tungsten_oxide_NO2.rds, 
+Indium_oxide.rds : LinearRegression.R Data/clean_aq.csv
+	Rscript Scripts/LinearRegression.R --data_dir="Data" --datafilename="clean_aq.csv"
 
 # Knit report
 docs/finalreport.html docs/finalreport.pdf : Images/correlation.png Images/pollutantsvstime.png Images/weathervstime.png Images/tempvsbenzene.png Docs/finalreport.Rmd Data/clean_aq.csv Scripts/Knit.R Docs/refs.bib
