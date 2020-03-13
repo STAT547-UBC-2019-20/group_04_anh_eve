@@ -45,20 +45,30 @@ main <- function(path, datafilename){
     map(~lm(.x ~  Temp + AH, data = airq_daily)) %>% 
     map(tidy) 
   
-
+  ##### Export your model object to an RDS file
+  
+  chemnames <- c("CO", "Tin_oxide", "Hydro_carbons", "Benzene", 
+                "Titania", "NOx", "Tungsten_oxide_NOx", "NO2", "Tungsten_oxide_NO2", 
+                "Indium_oxide")
+  
+  for (i in 1:length(regressions)) {
+    assign(chemnames[[i]], regressions[[i]])
+    saveRDS(regressions[[i]], file = paste(chemnames[[i]]))
+  }
+  
   
   ##### COEFFICIENTS PLOTS
   
-  chemModels <- rbind(regressions$CO %>% mutate(model = "CO"), 
-                      regressions$Tin_oxide %>% mutate(model = "Tin Oxide"),
-                      regressions$Hydro_carbons %>% mutate(model = "Hydro Carbons"),
-                      regressions$Benzene %>% mutate(model = "Benzene"), 
-                      regressions$Titania %>% mutate(model = "Titania"), 
-                      regressions$NOx %>% mutate(model = "NOx"), 
-                      regressions$Tungsten_oxide_NOx %>% mutate(model = "Tungsten Oxide NOx"), 
-                      regressions$NO2 %>% mutate(model = "NO2"),
-                      regressions$Tungsten_oxide_NO2 %>% mutate(model = "Tungsten Oxide NO2"), 
-                      regressions$Indium_oxide %>% mutate(model = "Indium Oxide")) %>% 
+  chemModels <- rbind(CO %>% mutate(model = "CO"), 
+                      Tin_oxide %>% mutate(model = "Tin Oxide"),
+                      Hydro_carbons %>% mutate(model = "Hydro Carbons"),
+                      Benzene %>% mutate(model = "Benzene"), 
+                      Titania %>% mutate(model = "Titania"), 
+                      NOx %>% mutate(model = "NOx"), 
+                      Tungsten_oxide_NOx %>% mutate(model = "Tungsten Oxide NOx"), 
+                      NO2 %>% mutate(model = "NO2"),
+                      Tungsten_oxide_NO2 %>% mutate(model = "Tungsten Oxide NO2"), 
+                      Indium_oxide %>% mutate(model = "Indium Oxide")) %>% 
     relabel_predictors(c("(Intercept)" = "Intercept",
                          Temp = "Temperature",
                          AH = "Absolute Humidity"))
@@ -74,7 +84,7 @@ main <- function(path, datafilename){
           legend.title = element_blank(),
           legend.key.size = unit(15, "pt"))
   
-  ggsave("Images/CoefPlot_Group4.png", device = 'png', width = 7, height = 7, units = "in")
+  ggsave("Images/CoefPlot_Group4.png", device = 'png', width = 15, height = 10, units = "in")
   
 }
 
