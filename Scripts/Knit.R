@@ -8,12 +8,19 @@
 "
 This script knits the final report Rmd file so that it exports an HTML and PDF file.
 
-Usage: LinearRegression.R --path=<path> --datafilename=<datafilename>
+Usage: Knit.R --docdir=<docdir> --finalreport=<finalreport>
 " -> doc
 
-library(tidyverse)
 library(here)
 library(docopt)
 
 opt <- docopt(doc)
 
+main <- function(docdir="Docs", finalreport) {
+  rmarkdown::render(here(docdir, finalreport), 
+                    c("html_document", "pdf_document"))
+}
+
+main(opt$docdir, opt$finalreport)
+
+#usage: Rscript Scripts/Knit.R --docdir="Docs" --finalreport="milestone2.rmd"
