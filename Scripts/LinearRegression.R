@@ -35,42 +35,35 @@ main <- function(path, datafilename){
   
   
   ##### Aggregate Daily Average
-  airq_daily = airq %>%
+  airq_daily = data %>%
     group_by(Date) %>%
     summarise_all(funs(mean), na.rm = TRUE)
   
+  ##### Regressions for ALL chemicals
+  regressions = airq_daily %>% 
+    select(-c(Date, Time, Date_time, Temp, RH, AH )) %>%  # leave only dependent variables
+    map(~lm(.x ~  Temp + AH, data = airq_daily)) %>% 
+    map(tidy) 
   
-  ##### REGRESSIONs
-  
-  #Fit benzene against temperature & humidity (relative humidity is correlated to temperature) 
-  Benzene = lm(`C6H6(GT)` ~ T + AH, data = airq_daily)
-  #save RDS file
-  saveRDS(Benzene, file = "Benzene.rds")
-  tidy(Benzene)
-  
-  #Fit titania against temperature & humidity 
-  Titania = lm(`PT08.S2(NMHC)` ~ T + AH, data = airq_daily)
-  #save RDS file
-  saveRDS(Titania, file = "Titania.rds")
-  tidy(Titania)
-  
-  #Fit tin oxide against temperature & humidity 
-  Tinoxide= lm(`PT08.S1(CO)` ~ T + AH, data = airq_daily)
-  #save RDS file
-  saveRDS(Tinoxide, file = "Tinoxide.rds")
-  tidy(Tinoxide)
-  
+
   
   ##### COEFFICIENTS PLOTS
   
-  threeM <- rbind(tidy(Benzene) %>% mutate(model = "Benzene"), 
-                  tidy(Titania) %>% mutate(model = "Titania"), 
-                  tidy(Tinoxide) %>% mutate(model = "Tin oxide")) %>% 
+  chemModels <- rbind(regressions$CO %>% mutate(model = "CO"), 
+                      regressions$Tin_oxide %>% mutate(model = "Tin Oxide"),
+                      regressions$Hydro_carbons %>% mutate(model = "Hydro Carbons"),
+                      regressions$Benzene %>% mutate(model = "Benzene"), 
+                      regressions$Titania %>% mutate(model = "Titania"), 
+                      regressions$NOx %>% mutate(model = "NOx"), 
+                      regressions$Tungsten_oxide_NOx %>% mutate(model = "Tungsten Oxide NOx"), 
+                      regressions$NO2 %>% mutate(model = "NO2"),
+                      regressions$Tungsten_oxide_NO2 %>% mutate(model = "Tungsten Oxide NO2"), 
+                      regressions$Indium_oxide %>% mutate(model = "Indium Oxide")) %>% 
     relabel_predictors(c("(Intercept)" = "Intercept",
-                         T = "Temperature",
+                         Temp = "Temperature",
                          AH = "Absolute Humidity"))
   
-  small_multiple(threeM) +
+  small_multiple(chemModels) +
     theme_bw() + 
     xlab("") +
     ylab("") +
