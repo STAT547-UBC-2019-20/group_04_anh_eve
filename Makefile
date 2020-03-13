@@ -19,8 +19,8 @@ Images/CoefPlot_Group4.png Data/CO.rds, Data/Tin_oxide.rds, Data/Hydro_carbons.r
 	Rscript Scripts/LinearRegression.R --data_dir="Data" --datafilename="clean_aq.csv"
 
 # Knit report
-Docs/milestone3.html Docs/milestone3.pdf : Images/correlation.png Images/pollutantsvstime.png Images/weathervstime.png Images/tempvsbenzene.png Data/clean_aq.csv Scripts/Knit.R
-	Rscript Scripts/Knit.R --docdir="Docs" --finalreport="milestone3.rmd"
+Docs/milestone2.html Docs/milestone2.pdf : Images/correlation.png Images/pollutantsvstime.png Images/weathervstime.png Images/tempvsbenzene.png Data/clean_aq.csv Scripts/Knit.R
+	Rscript Scripts/Knit.R --docdir="Docs" --finalreport="milestone2.rmd"
 
 # Phony target. Delete all files in data and images, leaving the script (delete .md and .html in docs). 
 clean:
@@ -30,7 +30,7 @@ clean:
 	rm -f Docs/*.html
 
 # Phony target. all is going to be a target, and its dependencies will be the final outputs of our data analysis pipeline. 
-all: Docs/milestone3.html Docs/milestone3.pdf
+all: Docs/milestone2.html Docs/milestone2.pdf
 
 
 
