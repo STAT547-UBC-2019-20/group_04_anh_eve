@@ -40,7 +40,11 @@ You can find the link to our project for milestone 2 [here](https://stat547-ubc-
 
   `Rscript Scripts/EDA.R --data_dir="Data" --datafilename="clean_aq.csv"`
 
+# Milestone 3 - Air quality data regressions
 
+- LinearRegression.R
+
+  `Rscript Scripts/EDA.R --data_dir="Data" --datafilename="clean_aq.csv"`
 
 
 
