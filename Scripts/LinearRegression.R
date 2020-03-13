@@ -53,7 +53,7 @@ main <- function(path, datafilename){
   
   for (i in 1:length(regressions)) {
     assign(chemnames[[i]], regressions[[i]])
-    saveRDS(regressions[[i]], file = paste("Data/",chemnames[[i]]), sep = "")
+    saveRDS(regressions[[i]], file = paste("Data/",chemnames[[i]], ".rds", sep = ""))
   }
   
   

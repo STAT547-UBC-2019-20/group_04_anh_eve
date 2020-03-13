@@ -21,6 +21,7 @@ main <- function(docdir="Docs", finalreport) {
                     c("html_document", "pdf_document"))
 }
 
+
 main(opt$docdir, opt$finalreport)
 
-#usage: Rscript Scripts/Knit.R --docdir="Docs" --finalreport="milestone2.rmd"
+#usage: Rscript Scripts/Knit.R --docdir="Docs" --finalreport="milestone3.rmd"
