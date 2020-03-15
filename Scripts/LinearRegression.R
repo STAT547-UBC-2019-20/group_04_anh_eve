@@ -88,6 +88,54 @@ main <- function(path, datafilename){
   
   print("Images saves to Images folder")
   
+  
+  
+  ### add some more plots with the linear regression line:
+  benzene_coefs <- readRDS(here::here("Data", "Benzene.rds"))
+  tita_coefs <- readRDS(here::here("Data", "Titania.rds"))
+  tin_coefs <- readRDS(here::here("Data", "Tin_oxide.rds"))
+  
+  lr_b <- benzene_coefs[2][[1]][2]*data["Temp"] + benzene_coefs[2][[1]][1]
+  lr_titania <- tita_coefs[2][[1]][2]*data["Temp"] + tita_coefs[2][[1]][1]
+  lr_tin <- tin_coefs[2][[1]][2]*data["Temp"] + tin_coefs[2][[1]][1]
+  new_data <- data
+  new_data["lr_b"] <- lr_b
+  new_data["lr_titania"] <- lr_titania
+  new_data["lr_tin"] <- lr_tin
+  
+  corb <- cor(new_data["Benzene"], new_data["Temp"], use = "complete.obs")
+  cor_tin <- cor(new_data["Tin_oxide"], new_data["Temp"], use = "complete.obs")
+  cor_t <- cor(new_data["Titania"], new_data["Temp"], use = "complete.obs")
+  
+  lr1 <- new_data %>% 
+    ggplot() + 
+    geom_point(aes(y=Benzene, x=Temp)) +
+    geom_line(aes(x=Temp, y=lr_b), color="red")+
+    theme_bw() +
+    xlab("Temperature (Degrees C)") +
+    ylab("concentration (microg/m^3)")+
+    ggtitle(glue::glue("Benzene concentration variation with temperature (corr = {round(corb, 2)})"))
+  
+  lr2 <- new_data %>% 
+    ggplot() + 
+    geom_point(aes(y=Titania, x=Temp)) +
+    geom_line(aes(x=Temp, y=lr_titania), color="red")+
+    theme_bw() +
+    xlab("Temperature (Degrees C)") +
+    ylab("concentration (microg/m^3)")+
+    ggtitle(glue::glue("Titania concentration variation with temperature (corr = {round(cor_t, 2)})"))
+  
+  lr3 <- new_data %>% 
+    ggplot() + 
+    geom_point(aes(y=Tin_oxide, x=Temp)) +
+    geom_line(aes(x=Temp, y=lr_tin), color="red")+
+    theme_bw() +
+    xlab("Temperature (Degrees C)") +
+    ylab("concentration (microg/m^3)")+
+    ggtitle(glue::glue("Tin Oxide concentration variation with temperature (corr = {round(cor_tin, 2)})"))
+    
+  lrplot <- plot_grid(lr1, lr2, lr3, ncol=1)
+  ggsave(filename = "Images/lr_plots.png", device = 'png')
 }
 
 main(opt$path, opt$datafilename)
