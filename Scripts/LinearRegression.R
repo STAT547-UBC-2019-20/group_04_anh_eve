@@ -86,7 +86,6 @@ main <- function(path, datafilename){
   
   ggsave("Images/CoefPlot_Group4.png", device = 'png', width = 15, height = 10, units = "in")
   
-  print("Images saves to Images folder")
   
   
   
@@ -136,6 +135,11 @@ main <- function(path, datafilename){
     
   lrplot <- plot_grid(lr1, lr2, lr3, ncol=1)
   ggsave(filename = "Images/lr_plots.png", device = 'png')
+  
+  
+  
+  print("Images saves to Images folder")
+  
 }
 
 main(opt$path, opt$datafilename)
