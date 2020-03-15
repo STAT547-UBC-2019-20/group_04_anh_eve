@@ -109,7 +109,7 @@ main <- function(path, datafilename){
   
   lr1 <- new_data %>% 
     ggplot() + 
-    geom_point(aes(y=Benzene, x=Temp)) +
+    geom_point(aes(y=Benzene, x=Temp), alpha=0.2) +
     geom_line(aes(x=Temp, y=lr_b), color="red")+
     theme_bw() +
     xlab("Temperature (Degrees C)") +
@@ -118,7 +118,7 @@ main <- function(path, datafilename){
   
   lr2 <- new_data %>% 
     ggplot() + 
-    geom_point(aes(y=Titania, x=Temp)) +
+    geom_point(aes(y=Titania, x=Temp), alpha=0.2) +
     geom_line(aes(x=Temp, y=lr_titania), color="red")+
     theme_bw() +
     xlab("Temperature (Degrees C)") +
@@ -127,7 +127,7 @@ main <- function(path, datafilename){
   
   lr3 <- new_data %>% 
     ggplot() + 
-    geom_point(aes(y=Tin_oxide, x=Temp)) +
+    geom_point(aes(y=Tin_oxide, x=Temp), alpha=0.2) +
     geom_line(aes(x=Temp, y=lr_tin), color="red")+
     theme_bw() +
     xlab("Temperature (Degrees C)") +
