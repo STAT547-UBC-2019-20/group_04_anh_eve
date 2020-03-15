@@ -113,36 +113,25 @@ The following graph shows the relationship of benzene to temperature over the ye
 
 ### Linear regression
 
-We then perform linear regression of all the separate pollutants with temperature and absolute humidity. 
+We then perform linear regression of all the separate pollutants with temperature and absolute humidity. The graph below shows the coeffecients for linear regression for temperature and humidity with all the various pollutants. 
 
 
+![](../Images/CoefPlot_Group4.png)
+The table below shows an example of the output of the linear regression model. 
 ```{r echo=FALSE, warnings = FALSE}
-benzene_coefs <- readRDS(here::here("Data", "Benzene.rds"))
+(benzene_coefs <- readRDS(here::here("Data", "Benzene.rds")))
 
-yt <- benzene_coefs[2][[1]][2]*airq["Temp"] + benzene_coefs[2][[1]][1]
-new_data <- airq
-new_data["yt"] <- yt
-
-
-
-#ggplot(data=subset(new_data, !is.na(Temp)), aes(x=Temp, y=yt)) + 
-
-
-plot_bz_w_time <- new_data %>% 
-  ggplot() + 
-  geom_point(aes(y=Benzene, x=Temp)) +
-  geom_line(aes(x=Temp, y=yt, color = 'Regression line'))+
-  theme_bw() +
-  xlab("Temperature (Degrees C)") +
-  ylab("Benzene concentration (microg/m^3")+
-  ggtitle("Benzene concentration variation with temperature")
-
-plot_bz_w_time
-
-#plot()
 ```
 
 
+The next plot shows three of the pollutants (Benzene, Titania and Tin Oxide) plotted with temperature with the linear regression line also plotted. From looking at the plots we can tell the the linear regression line does not represent a lot of the data well. This is shown in the low correlations values (in the plot titles). 
+
+![](../Images/lr_plots.png)
+
+
+## Discussion and Conclusion
+
+It is clear that just looking at the values of temperature and humidity on their own do not provide sufficient information to explain or predict the given concentrations of pollutants. This can be see in the figures produced above where the linear regression line does not capture well the variation of pollutants. Altough weather will affect some pollutants, a more important determinant of pollutant concentrations is emissions. These often vary with time of day and human activity and thus a model incorporating weather as well as these other important variables would likely be more accurate. 
 
 
 ## References
