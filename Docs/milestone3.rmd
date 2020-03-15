@@ -70,10 +70,10 @@ kable(desc.tbl)
 ```
 
 Here you can see the data that we use:
-```{r read data, echo=FALSE, warnings = FALSE}
+```{r read data, warnings = FALSE, echo= FALSE, message=FALSE}
 # first we read the data in
 airq <- readr::read_csv(here::here("data","clean_aq.csv"))
-DT::datatable(airq)
+DT::datatable(head(airq, 50))
 ```
 
 
