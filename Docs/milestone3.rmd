@@ -36,6 +36,7 @@ As stated above we would like to understand the impact of weather on air quality
 
 ## Data and methods
 
+
 ### Data Description
 
 The air quality [dataset](https://archive.ics.uci.edu/ml/datasets/Air+Quality) used in this analysis was obtained from the University of California Irvine Machine learning Repository. It was contributed by Saverio De Vito from the National Agency for New Technologies, Energy and Sustainable Economic Development. 
@@ -68,7 +69,12 @@ desc.tbl = data.frame(Variables, Type, Description)
 kable(desc.tbl)
 ```
 
-
+Here you can see the data that we use:
+```{r read data, echo=FALSE, warnings = FALSE}
+# first we read the data in
+airq <- readr::read_csv(here::here("data","clean_aq.csv"))
+DT::datatable(airq)
+```
 
 
 ### Methods
@@ -76,22 +82,15 @@ We are interested in the hourly averaged concentrations of air pollutants, tempe
 
 ## Results
 
-### Exploring the dataset
+We first performed some exploratory data analysis of the air quality data. 
 
-Here you can see the data that we use:
-```{r read data, warnings = FALSE}
-# first we read the data in
-airq <- readr::read_csv(here::here("data","airquality.csv"))
-DT::datatable(airq)
-```
-
+### Exploratory data analysis
 
 #### Graph 1: Correlogram of pollutants
 
 ![](../Images/correlation.png)
 
 Looking at the correlations of the pollutants with weather, we can see that for all pollutants except NOx, temperature (T) is positively correlated, although weakly so. This means that higher temperatures correspond to higher concentrations of the gases. Relative humidity (RH) is negatively and correlated to temperature and has a weak negative correlation to the concentrations of pollutants, except NOx. Absolute humidity (AH) has stronger correlations, mostly positive, although, like temperature, it has a negative correlation with NOx. 
-
 
 #### Graph 2: Concentration of some Air Pollutants, Temperature, Humidity over Time, daily average
 
@@ -106,16 +105,44 @@ The plot below show the **daily** averaged values of temperature and humidity fo
 
 ![](../Images/weathervstime.png)
 
-
 #### Graph 4: Temperature vs. Benzene concentration
 
 The following graph shows the relationship of benzene to temperature over the year in which data was recorded. The plot suggests there is perhaps a slight relationship. Linear regression in future work will help to clarify the relationships between weather and pollutant concentrations. 
 
 ![](../Images/tempvsbenzene.png)
 
+### Linear regression
+
+We then perform linear regression of all the separate pollutants with temperature and absolute humidity. 
 
 
-## Results
+```{r echo=FALSE, warnings = FALSE}
+benzene_coefs <- readRDS(here::here("Data", "Benzene.rds"))
+
+yt <- benzene_coefs[2][[1]][2]*airq["Temp"] + benzene_coefs[2][[1]][1]
+new_data <- airq
+new_data["yt"] <- yt
+
+
+
+#ggplot(data=subset(new_data, !is.na(Temp)), aes(x=Temp, y=yt)) + 
+
+
+plot_bz_w_time <- new_data %>% 
+  ggplot() + 
+  geom_point(aes(y=Benzene, x=Temp)) +
+  geom_line(aes(x=Temp, y=yt, color = 'Regression line'))+
+  theme_bw() +
+  xlab("Temperature (Degrees C)") +
+  ylab("Benzene concentration (microg/m^3")+
+  ggtitle("Benzene concentration variation with temperature")
+
+plot_bz_w_time
+
+#plot()
+```
+
+
 
 
 ## References
