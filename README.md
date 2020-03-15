@@ -1,15 +1,21 @@
-# Milestone 1 - Air quality data exploration
+# Air quality data exploration
 By Anh Le and Eve Wicksteed
-
-You can find the link to our report for milestone 1 [here](https://stat547-ubc-2019-20.github.io/group_04_anh_eve/Docs/milestone1.html)
 
 In our project we use air quality data from [the UPI Machine Learning Repository](https://archive.ics.uci.edu/ml/datasets/Air+Quality).
 
+# Milestone 1
+
+You can find the link to our report for milestone 1 [here](https://stat547-ubc-2019-20.github.io/group_04_anh_eve/Docs/milestone1.html)
 
 
-# Milestone 2 - Air quality data exploration
+# Milestone 2
 
 You can find the link to our project for milestone 2 [here](https://stat547-ubc-2019-20.github.io/group_04_anh_eve/Docs/milestone2.html)
+
+# Milestone 3
+
+You can find the link to our project for milestone 2 [here](https://stat547-ubc-2019-20.github.io/group_04_anh_eve/Docs/milestone3.html)
+
 
 ## Usage:
 
@@ -25,12 +31,19 @@ You can find the link to our project for milestone 2 [here](https://stat547-ubc-
 - tidyquant
 - corrplot
 - cowplot
+- broom
+- dotwhisker
+- ggplot2
+- docopt
+
 
 3. Run the following scripts (in order)
 
+### To run scripts one by one:
+
 - load_data.R
 
-  `Rscript Scripts/load_data.R --url="https://raw.githubusercontent.com/STAT547-UBC-2019-20/data_sets/master/airquality.csv" -- outfilename="aq.csv"`
+  `Rscript Scripts/load_data.R --url="https://raw.githubusercontent.com/STAT547-UBC-2019-20/data_sets/master/airquality.csv" --outfilename="aq.csv"`
 
 - clean_data.R
 
@@ -40,16 +53,17 @@ You can find the link to our project for milestone 2 [here](https://stat547-ubc-
 
   `Rscript Scripts/EDA.R --data_dir="Data" --datafilename="clean_aq.csv"`
 
-# Milestone 3 - Air quality data regressions
-
 - LinearRegression.R
 
-  `Rscript Scripts/EDA.R --data_dir="Data" --datafilename="clean_aq.csv"`
+  `Rscript Scripts/LinearRegression.R --path="Data/" --datafilename="clean_aq.csv"`
   
 - Knit.R
 
-  `Rscript Scripts/Knit.R --docdir="Docs" --finalreport="milestone2.rmd"`
+  `Rscript Scripts/Knit.R --docdir="Docs" --finalreport="milestone3.rmd"`
 
 
+### Or use GNU MAKE:
 
+**Need to add more to this section**
+- `make all`
 
