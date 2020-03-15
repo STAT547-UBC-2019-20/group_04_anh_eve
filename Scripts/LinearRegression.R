@@ -86,6 +86,8 @@ main <- function(path, datafilename){
   
   ggsave("Images/CoefPlot_Group4.png", device = 'png', width = 15, height = 10, units = "in")
   
+  print("Images saves to Images folder")
+  
 }
 
 main(opt$path, opt$datafilename)
