@@ -77,7 +77,7 @@ main <- function(path, datafilename){
     theme_bw() + 
     xlab("") +
     ylab("") +
-    ggtitle("Coefficient Estimates for Predicting Air Pollutants' Concentrate") +
+    ggtitle("Coefficient Estimates for Predicting Air Pollutants' Concentration") +
     theme(plot.title = element_text(size = 15, hjust = 0.5, family="serif"),
           legend.position = "none",
           legend.background = element_rect(colour="grey80"),
