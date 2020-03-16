@@ -14,7 +14,7 @@ You can find the link to our project for milestone 2 [here](https://stat547-ubc-
 
 # Milestone 3
 
-You can find the link to our project for milestone 2 [here](https://stat547-ubc-2019-20.github.io/group_04_anh_eve/Docs/milestone3.html)
+You can find the link to our project for milestone 3 [here](https://stat547-ubc-2019-20.github.io/group_04_anh_eve/Docs/milestone3.html)
 
 
 ## Usage:
