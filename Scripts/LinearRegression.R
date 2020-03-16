@@ -137,7 +137,49 @@ main <- function(path, datafilename){
   ggsave(filename = "Images/lr_plots.png", device = 'png')
   
   
+  ##### NEW PLOT WITH LINEAR REGRESSION LINES
   
+  fit1 <- lm(new_data$Benzene ~  new_data$Temp + new_data$AH)
+  fit2 <- lm(new_data$Titania ~  new_data$Temp + new_data$AH)
+  fit3 <- lm(new_data$Tin_oxide ~  new_data$Temp + new_data$AH)
+  
+  equation1=function(x){coef(fit1)[2]*x+coef(fit1)[1]}
+  equation2=function(x){coef(fit2)[2]*x+coef(fit2)[1]}
+  equation3=function(x){coef(fit3)[2]*x+coef(fit3)[1]}
+  
+  np1 <- new_data %>% 
+    ggplot(aes(y=Benzene,x=Temp,color=AH))+
+    geom_point()+
+    stat_function(fun=equation1,geom="line",color=scales::hue_pal()(2)[1])+
+    theme_bw() +
+    xlab("Temperature (Degrees C)") +
+    ylab("concentration (microg/m^3)")+
+    ggtitle(glue::glue("Benzene concentration variation with temperature (corr = {round(corb, 2)})"))
+  
+  np2 <- new_data %>% 
+    ggplot(aes(y=Titania,x=Temp,color=AH))+
+    geom_point()+
+    stat_function(fun=equation2,geom="line",color=scales::hue_pal()(2)[1])+
+    theme_bw() +
+    xlab("Temperature (Degrees C)") +
+    ylab("concentration (microg/m^3)")+
+    ggtitle(glue::glue("Titania concentration variation with temperature (corr = {round(cor_t, 2)})"))
+  
+  
+  np3 <- new_data %>% 
+    ggplot(aes(y=Tin_oxide,x=Temp,color=AH))+
+    geom_point()+
+    stat_function(fun=equation3,geom="line",color=scales::hue_pal()(2)[1])+
+    theme_bw() +
+    xlab("Temperature (Degrees C)") +
+    ylab("concentration (microg/m^3)")+
+    ggtitle(glue::glue("Tin oxide concentration variation with temperature (corr = {round(cor_tin, 2)})"))
+  
+  
+  more_lrplots <- plot_grid(np1, np2, np3, ncol=1)
+  ggsave(filename = "Images/more_lr_plots.png", device = 'png')
+  
+  print("Script should have run sucessfully")
   print("Images saves to Images folder")
   
 }

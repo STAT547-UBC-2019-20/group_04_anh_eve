@@ -18,6 +18,7 @@ library(lubridate)
 library(tidyquant)
 library(corrplot)
 library(cowplot)
+library(scatterplot3d)
 ```
 
 
@@ -126,7 +127,8 @@ The table below shows an example of the output of the linear regression model.
 
 The next plot shows three of the pollutants (Benzene, Titania and Tin Oxide) plotted with temperature with the linear regression line also plotted. From looking at the plots we can tell the the linear regression line does not represent a lot of the data well. This is shown in the low correlations values (in the plot titles). 
 
-![](../Images/lr_plots.png)
+![](../Images/more_lr_plots.png)
+
 
 
 ## Discussion and Conclusion
