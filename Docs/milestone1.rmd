@@ -116,6 +116,7 @@ From this we see that for many of the observations less than 4% of the data is m
 #convert Missing Values (tagged with -200 value) to NA
 airq[airq == -200] = NA 
 
+
 # Convert numeric columns to 'double' type
 airq[3:15] <- sapply(airq[3:15], as.double)
 airq_corr <- cor(airq[3:15], use = "complete.obs")
