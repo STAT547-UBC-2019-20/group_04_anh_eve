@@ -143,6 +143,11 @@ main <- function(path, datafilename){
   fit2 <- lm(new_data$Titania ~  new_data$Temp + new_data$AH)
   fit3 <- lm(new_data$Tin_oxide ~  new_data$Temp + new_data$AH)
   
+  corb <- summary(fit1)$r.squared
+  cor_tin <- summary(fit3)$r.squared
+  cor_t <- summary(fit2)$r.squared
+  
+  
   equation1=function(x){coef(fit1)[2]*x+coef(fit1)[1]}
   equation2=function(x){coef(fit2)[2]*x+coef(fit2)[1]}
   equation3=function(x){coef(fit3)[2]*x+coef(fit3)[1]}
