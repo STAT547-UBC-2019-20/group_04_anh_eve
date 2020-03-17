@@ -154,7 +154,7 @@ The next plot shows three of the pollutants (Benzene, Titania and Tin Oxide) plo
 
 ## Discussion and Conclusion
 
-It is clear that just looking at the values of temperature and humidity on their own do not provide sufficient information to explain or predict the given concentrations of pollutants. This can be see in the figures produced above where the linear regression line does not capture well the variation of pollutants. Altough weather will affect some pollutants, a more important determinant of pollutant concentrations is emissions. These often vary with time of day and human activity and thus a model incorporating weather as well as these other important variables would likely be more accurate. 
+It is clear that just looking at the values of temperature and humidity on their own do not provide sufficient information to explain or predict the given concentrations of pollutants. This can be seen in the figures produced above where the linear regression line does not capture well the variation of pollutants. Although weather will affect some pollutants, a more important determinant of pollutant concentrations is emissions. These often vary with time of day and human activity and thus a model incorporating weather as well as these other important variables would likely be more accurate. 
 
 
 
