@@ -16,7 +16,7 @@ Images/correlation.png Images/pollutantsvstime.png Images/weathervstime.png Imag
 	
 # LinearRegression
 Images/CoefPlot_Group4.png Data/CO.rds, Data/Tin_oxide.rds, Data/Hydro_carbons.rds, Data/Benzene.rds, Data/Titania.rds, Data/NOx.rds,Data/Tungsten_oxide_NOx.rds, Data/NO2.rds, Data/Tungsten_oxide_NO2.rds, Data/Indium_oxide.rds : Scripts/LinearRegression.R Data/clean_aq.csv
-	Rscript Scripts/LinearRegression.R --data_dir="Data" --datafilename="clean_aq.csv"
+	Rscript Scripts/LinearRegression.R --path="Data/" --datafilename="clean_aq.csv"
 
 # Knit report
 Docs/milestone3.html Docs/milestone3.pdf : Images/lr_plots.png Images/correlation.png Images/pollutantsvstime.png Images/weathervstime.png Images/tempvsbenzene.png Data/clean_aq.csv Scripts/Knit.R

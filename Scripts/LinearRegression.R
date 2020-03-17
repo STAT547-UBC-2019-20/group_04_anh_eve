@@ -59,128 +59,36 @@ main <- function(path, datafilename){
   
   ##### COEFFICIENTS PLOTS
   
-  chemModels <- rbind(CO %>% mutate(model = "CO"), 
-                      Tin_oxide %>% mutate(model = "Tin Oxide"),
-                      Hydro_carbons %>% mutate(model = "Hydro Carbons"),
+  #NOx %>% mutate(model = "NOx"), 
+  #Tungsten_oxide_NOx %>% mutate(model = "Tungsten Oxide NOx"), 
+  #NO2 %>% mutate(model = "NO2"),
+  #Tungsten_oxide_NO2 %>% mutate(model = "Tungsten Oxide NO2"), 
+  #Indium_oxide %>% mutate(model = "Indium Oxide")) 
+  #CO %>% mutate(model = "CO"), 
+  #Hydro_carbons %>% mutate(model = "Hydro Carbons"),
+  
+  chemModels <- rbind(Tin_oxide %>% mutate(model = "Tin Oxide"),
                       Benzene %>% mutate(model = "Benzene"), 
-                      Titania %>% mutate(model = "Titania"), 
-                      NOx %>% mutate(model = "NOx"), 
-                      Tungsten_oxide_NOx %>% mutate(model = "Tungsten Oxide NOx"), 
-                      NO2 %>% mutate(model = "NO2"),
-                      Tungsten_oxide_NO2 %>% mutate(model = "Tungsten Oxide NO2"), 
-                      Indium_oxide %>% mutate(model = "Indium Oxide")) %>% 
+                      Titania %>% mutate(model = "Titania")) %>% 
     relabel_predictors(c("(Intercept)" = "Intercept",
                          Temp = "Temperature",
                          AH = "Absolute Humidity"))
   
-  small_multiple(chemModels) +
+  small_multiple(chemModels, show_intercept = FALSE) +
+    geom_hline(yintercept = 0, colour = "grey60", linetype = 2) +
     theme_bw() + 
-    xlab("") +
-    ylab("") +
-    ggtitle("Coefficient Estimates for Predicting Air Pollutants' Concentration") +
-    theme(plot.title = element_text(size = 15, hjust = 0.5, family="serif"),
+    xlab("Pollutants/ Dependant Variables") +
+    ylab("Coefficient Estimates") +
+    ggtitle("Coefficient Estimates for Predicting Air Pollutants' Concentrate") +
+    theme(plot.title = element_text(size = 25, hjust = 0.5, family="serif", margin=margin(0,0,30,0)),
           legend.position = "none",
-          legend.background = element_rect(colour="grey80"),
-          legend.title = element_blank(),
-          legend.key.size = unit(15, "pt"))
+          legend.background = element_rect(colour="grey00"),
+          axis.text = element_text(size = 15, family="serif"),
+          axis.title.x = element_text(size = 25, family="serif", vjust = 1),
+          axis.title.y = element_text(size = 25, family="serif", vjust = 1))
+      
   
   ggsave("Images/CoefPlot_Group4.png", device = 'png', width = 15, height = 10, units = "in")
-  
-  
-  
-  
-  ### add some more plots with the linear regression line:
-  benzene_coefs <- readRDS(here::here("Data", "Benzene.rds"))
-  tita_coefs <- readRDS(here::here("Data", "Titania.rds"))
-  tin_coefs <- readRDS(here::here("Data", "Tin_oxide.rds"))
-  
-  lr_b <- benzene_coefs[2][[1]][2]*data["Temp"] + benzene_coefs[2][[1]][1]
-  lr_titania <- tita_coefs[2][[1]][2]*data["Temp"] + tita_coefs[2][[1]][1]
-  lr_tin <- tin_coefs[2][[1]][2]*data["Temp"] + tin_coefs[2][[1]][1]
-  new_data <- data
-  new_data["lr_b"] <- lr_b
-  new_data["lr_titania"] <- lr_titania
-  new_data["lr_tin"] <- lr_tin
-  
-  corb <- cor(new_data["Benzene"], new_data["Temp"], use = "complete.obs")
-  cor_tin <- cor(new_data["Tin_oxide"], new_data["Temp"], use = "complete.obs")
-  cor_t <- cor(new_data["Titania"], new_data["Temp"], use = "complete.obs")
-  
-  lr1 <- new_data %>% 
-    ggplot() + 
-    geom_point(aes(y=Benzene, x=Temp), alpha=0.2) +
-    geom_line(aes(x=Temp, y=lr_b), color="red")+
-    theme_bw() +
-    xlab("Temperature (Degrees C)") +
-    ylab("concentration (microg/m^3)")+
-    ggtitle(glue::glue("Benzene concentration variation with temperature (corr = {round(corb, 2)})"))
-  
-  lr2 <- new_data %>% 
-    ggplot() + 
-    geom_point(aes(y=Titania, x=Temp), alpha=0.2) +
-    geom_line(aes(x=Temp, y=lr_titania), color="red")+
-    theme_bw() +
-    xlab("Temperature (Degrees C)") +
-    ylab("concentration (microg/m^3)")+
-    ggtitle(glue::glue("Titania concentration variation with temperature (corr = {round(cor_t, 2)})"))
-  
-  lr3 <- new_data %>% 
-    ggplot() + 
-    geom_point(aes(y=Tin_oxide, x=Temp), alpha=0.2) +
-    geom_line(aes(x=Temp, y=lr_tin), color="red")+
-    theme_bw() +
-    xlab("Temperature (Degrees C)") +
-    ylab("concentration (microg/m^3)")+
-    ggtitle(glue::glue("Tin Oxide concentration variation with temperature (corr = {round(cor_tin, 2)})"))
-    
-  lrplot <- plot_grid(lr1, lr2, lr3, ncol=1)
-  ggsave(filename = "Images/lr_plots.png", device = 'png')
-  
-  
-  ##### NEW PLOT WITH LINEAR REGRESSION LINES
-  
-  fit1 <- lm(new_data$Benzene ~  new_data$Temp + new_data$AH)
-  fit2 <- lm(new_data$Titania ~  new_data$Temp + new_data$AH)
-  fit3 <- lm(new_data$Tin_oxide ~  new_data$Temp + new_data$AH)
-  
-  equation1=function(x){coef(fit1)[2]*x+coef(fit1)[1]}
-  equation2=function(x){coef(fit2)[2]*x+coef(fit2)[1]}
-  equation3=function(x){coef(fit3)[2]*x+coef(fit3)[1]}
-  
-  np1 <- new_data %>% 
-    ggplot(aes(y=Benzene,x=Temp,color=AH))+
-    geom_point()+
-    stat_function(fun=equation1,geom="line",color=scales::hue_pal()(2)[1])+
-    theme_bw() +
-    xlab("Temperature (Degrees C)") +
-    ylab("concentration (microg/m^3)")+
-    ggtitle(glue::glue("Benzene concentration variation with temperature (corr = {round(corb, 2)})"))
-  
-  np2 <- new_data %>% 
-    ggplot(aes(y=Titania,x=Temp,color=AH))+
-    geom_point()+
-    stat_function(fun=equation2,geom="line",color=scales::hue_pal()(2)[1])+
-    theme_bw() +
-    xlab("Temperature (Degrees C)") +
-    ylab("concentration (microg/m^3)")+
-    ggtitle(glue::glue("Titania concentration variation with temperature (corr = {round(cor_t, 2)})"))
-  
-  
-  np3 <- new_data %>% 
-    ggplot(aes(y=Tin_oxide,x=Temp,color=AH))+
-    geom_point()+
-    stat_function(fun=equation3,geom="line",color=scales::hue_pal()(2)[1])+
-    theme_bw() +
-    xlab("Temperature (Degrees C)") +
-    ylab("concentration (microg/m^3)")+
-    ggtitle(glue::glue("Tin oxide concentration variation with temperature (corr = {round(cor_tin, 2)})"))
-  
-  
-  more_lrplots <- plot_grid(np1, np2, np3, ncol=1)
-  ggsave(filename = "Images/more_lr_plots.png", device = 'png')
-  
-  print("Script should have run sucessfully")
-  print("Images saves to Images folder")
   
 }
 
