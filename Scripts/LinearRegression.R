@@ -59,34 +59,36 @@ main <- function(path, datafilename){
   
   ##### COEFFICIENTS PLOTS
   
-  chemModels <- rbind(CO %>% mutate(model = "CO"), 
-                      Tin_oxide %>% mutate(model = "Tin Oxide"),
-                      Hydro_carbons %>% mutate(model = "Hydro Carbons"),
+  #NOx %>% mutate(model = "NOx"), 
+  #Tungsten_oxide_NOx %>% mutate(model = "Tungsten Oxide NOx"), 
+  #NO2 %>% mutate(model = "NO2"),
+  #Tungsten_oxide_NO2 %>% mutate(model = "Tungsten Oxide NO2"), 
+  #Indium_oxide %>% mutate(model = "Indium Oxide")) 
+  #CO %>% mutate(model = "CO"), 
+  #Hydro_carbons %>% mutate(model = "Hydro Carbons"),
+  
+  chemModels <- rbind(Tin_oxide %>% mutate(model = "Tin Oxide"),
                       Benzene %>% mutate(model = "Benzene"), 
-                      Titania %>% mutate(model = "Titania"), 
-                      NOx %>% mutate(model = "NOx"), 
-                      Tungsten_oxide_NOx %>% mutate(model = "Tungsten Oxide NOx"), 
-                      NO2 %>% mutate(model = "NO2"),
-                      Tungsten_oxide_NO2 %>% mutate(model = "Tungsten Oxide NO2"), 
-                      Indium_oxide %>% mutate(model = "Indium Oxide")) %>% 
+                      Titania %>% mutate(model = "Titania")) %>% 
     relabel_predictors(c("(Intercept)" = "Intercept",
                          Temp = "Temperature",
                          AH = "Absolute Humidity"))
   
-  small_multiple(chemModels) +
+  small_multiple(chemModels, show_intercept = FALSE) +
+    geom_hline(yintercept = 0, colour = "grey60", linetype = 2) +
     theme_bw() + 
-    xlab("") +
-    ylab("") +
-    ggtitle("Coefficient Estimates for Predicting Air Pollutants' Concentration") +
-    theme(plot.title = element_text(size = 15, hjust = 0.5, family="serif"),
+    xlab("Pollutants/ Dependant Variables") +
+    ylab("Coefficient Estimates") +
+    ggtitle("Coefficient Estimates for Predicting Air Pollutants' Concentrate") +
+    theme(plot.title = element_text(size = 25, hjust = 0.5, family="serif", margin=margin(0,0,30,0)),
           legend.position = "none",
-          legend.background = element_rect(colour="grey80"),
-          legend.title = element_blank(),
-          legend.key.size = unit(15, "pt"))
+          legend.background = element_rect(colour="grey00"),
+          axis.text = element_text(size = 15, family="serif"),
+          axis.title.x = element_text(size = 25, family="serif", vjust = 1),
+          axis.title.y = element_text(size = 25, family="serif", vjust = 1))
+      
   
   ggsave("Images/CoefPlot_Group4.png", device = 'png', width = 15, height = 10, units = "in")
-  
-  
   
   
   ### add some more plots with the linear regression line:
