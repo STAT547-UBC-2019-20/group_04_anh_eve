@@ -64,6 +64,5 @@ You can find the link to our project for milestone 3 [here](https://stat547-ubc-
 
 ### Or use GNU MAKE:
 
-**Need to add more to this section**
-- `make all`
+To run all scripts first run: `make clean` in the terminal. And then run `make all` to generate everything. 
 

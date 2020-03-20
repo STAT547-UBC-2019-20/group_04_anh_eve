@@ -111,11 +111,40 @@ dfmissing %>%
 
 From this we see that for many of the observations less than 4% of the data is missing. This is adequate for the research we are conducting. 
 
+
+```{r}
+#airq
+  
+
+newnames <- c("Date", "Time", "CO", "Tin_oxide", "Hydro_carbons", "Benzene", "Titania", "NOx", "Tungsten_oxide_NOx", "NO2", "Tungsten_oxide_NO2", "Indium_oxide", "Temp", "RH", "AH")
+
+for (i in 1:ncol(airq)){
+  print(i)
+  names(airq)[i]=newnames[i]
+}
+
+airq
+# rename_f = function(col, newname){
+#   names(airq)[col]=newname
+# }
+
+#new <- map(newnames, ~rename_f(cols,.x))
+
+
+#new
+airq %>% 
+  ggplot() + 
+  geom_line(aes(y=Benzene, x=Temp)) +
+  theme_bw() +
+  xlab("Temperature (Degrees C") +
+  ylab("Benzene concentration (microg/m^3")
+```
+
+
 ### Graph 1: Correlogram of pollutants
 ``` {r Graph 1}
 #convert Missing Values (tagged with -200 value) to NA
 airq[airq == -200] = NA 
-
 
 # Convert numeric columns to 'double' type
 airq[3:15] <- sapply(airq[3:15], as.double)

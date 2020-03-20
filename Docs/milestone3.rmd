@@ -70,7 +70,9 @@ desc.tbl = data.frame(Variables, Type, Description)
 kable(desc.tbl)
 ```
 
+
 Here you can see the data that we use:
+
 ```{r read data, warnings = FALSE, echo= FALSE, message=FALSE}
 # first we read the data in
 airq <- readr::read_csv(here::here("data","clean_aq.csv"))
@@ -79,40 +81,55 @@ DT::datatable(head(airq, 50))
 
 
 ### Methods
+
 We are interested in the hourly averaged concentrations of air pollutants, temperature and humidity. We ignore variables which have too many missing data to increase the precision of this analysis. The air pollutants that we will focus on are benzene, titania and tin oxide. After dealing with the missing data, we will perform a linear regression analysis using the OLS (ordinary least squares) method. Coefficients of relevant variables will be plotted with confidence intervals.
+
+
 
 ## Results
 
 We first performed some exploratory data analysis of the air quality data. 
 
+
 ### Exploratory data analysis
+
 
 #### Graph 1: Correlogram of pollutants
 
 ![](../Images/correlation.png)
 
+
 Looking at the correlations of the pollutants with weather, we can see that for all pollutants except NOx, temperature (T) is positively correlated, although weakly so. This means that higher temperatures correspond to higher concentrations of the gases. Relative humidity (RH) is negatively and correlated to temperature and has a weak negative correlation to the concentrations of pollutants, except NOx. Absolute humidity (AH) has stronger correlations, mostly positive, although, like temperature, it has a negative correlation with NOx. 
 
+
 #### Graph 2: Concentration of some Air Pollutants, Temperature, Humidity over Time, daily average
+
 
 The plot below shows the **daily** averaged concentrations of some of the pollutants (tin oxide, benzene, and Titania) for a year.
 
 ![](../Images/pollutantsvstime.png)
 
 
+
 #### Graph 3: Concentration Temperature and Humidity over Time
+
 
 The plot below show the **daily** averaged values of temperature and humidity for a year.
 
 ![](../Images/weathervstime.png)
 
+
 #### Graph 4: Temperature vs. Benzene concentration
+
 
 The following graph shows the relationship of benzene to temperature over the year in which data was recorded. The plot suggests there is perhaps a slight relationship. Linear regression in future work will help to clarify the relationships between weather and pollutant concentrations. 
 
 ![](../Images/tempvsbenzene.png)
 
+
+
 ### Linear regression
+
 
 We then perform linear regression of all the separate pollutants with temperature and absolute humidity. The graph below shows the coeffecients for linear regression for temperature and humidity with all the various pollutants. 
 
@@ -120,12 +137,17 @@ We then perform linear regression of all the separate pollutants with temperatur
 ![](../Images/CoefPlot_Group4.png)
 
 
+<<<<<<< HEAD
 
 The table below shows an example of the output of the linear regression model. Dependent variable is Benzene, independent variables are temperature (Temp), and absolute humidity (AH).  
+=======
+The table below shows an example of the output of the linear regression model. 
+>>>>>>> upstream/master
 ```{r echo=FALSE, warnings = FALSE}
 (benzene_coefs <- readRDS(here::here("Data", "Benzene.rds")))
 
 ```
+
 
 
 The next plot shows three of the pollutants (Benzene, Titania and Tin Oxide) plotted with temperature with the linear regression line also plotted. From looking at the plots we can tell the the linear regression line does not represent a lot of the data well. This is shown in the low correlations values (in the plot titles). 
@@ -134,9 +156,11 @@ The next plot shows three of the pollutants (Benzene, Titania and Tin Oxide) plo
 
 
 
+
 ## Discussion and Conclusion
 
-It is clear that just looking at the values of temperature and humidity on their own do not provide sufficient information to explain or predict the given concentrations of pollutants. This can be seen in the figures produced above where the linear regression line does not capture well the variation of pollutants. Altough weather will affect some pollutants, a more important determinant of pollutant concentrations is emissions. These often vary with time of day and human activity and thus a model incorporating weather as well as these other important variables would likely be more accurate. 
+It is clear that just looking at the values of temperature and humidity on their own do not provide sufficient information to explain or predict the given concentrations of pollutants. This can be seen in the figures produced above where the linear regression line does not capture well the variation of pollutants. Although weather will affect some pollutants, a more important determinant of pollutant concentrations is emissions. These often vary with time of day and human activity and thus a model incorporating weather as well as these other important variables would likely be more accurate. 
+
 
 
 ## References
