@@ -17,6 +17,11 @@ You can find the link to our project for milestone 2 [here](https://stat547-ubc-
 You can find the link to our project for milestone 3 [here](https://stat547-ubc-2019-20.github.io/group_04_anh_eve/Docs/milestone3.html)
 
 
+# Milestone 4
+
+You can find the link to our project for milestone 4 [here](https://stat547-ubc-2019-20.github.io/group_04_anh_eve/Docs/milestone4.html)
+
+
 ## Usage:
 
 1. Clone this repo:
