@@ -2,34 +2,24 @@
 title: "Milestone 3"
 author: "Anh Le, Eve Wicksteed"
 output:
+  pdf_document: default
   html_document:
     df_print: paged
-    toc: true
-    toc_float: 
-      collapsed: false
-      smooth_scroll: true
-  pdf_document: default
 editor_options:
   chunk_output_type: inline
-always_allow_html: yes
 ---
 
-```{r libraries, include=FALSE}
+```{r libraries, echo= FALSE, warnings = FALSE, echo= FALSE, message=FALSE}
 library(here)
 library(tidyverse)
 library(DT)
+library(knitr)
 library(lubridate) 
 library(tidyquant)
 library(corrplot)
 library(cowplot)
 library(scatterplot3d)
-library(knitr)
-library(kableExtra)
 ```
-
-
-
-
 
 
 # The impact of weather on air quality
@@ -54,7 +44,7 @@ The air quality [dataset](https://archive.ics.uci.edu/ml/datasets/Air+Quality) u
 
 The dataset contains 15 variables and 9358 observations of hourly averaged responses from an Air Quality Chemical Multisensor Device. Data were recorded from March 2004 to February 2005, in a significantly polluted area, at road level, within a city in Italy. Variables include the date and time each response was recorded, and the corresponding concentrations of 13 air pollutants analyzed by the sensor device. Missing values are tagged with -200 value. Below is the entire variable set: 
 
-```{r echo = FALSE, results='asis', warning = TRUE}
+```{r echo = FALSE, results='asis'}
 Variables = c("Date", "Time", "CO(GT)", "PT08.S1(CO)", "NMHC(GT)", 
               "C6H6(GT)","PT08.S2(NMHC)","NOx(GT)", "PT08.S3(NOx)", "NO2(GT)",
               "PT08.S4(NO2)", "PT08.S5(O3)", "T", "RH", "AH")
@@ -77,19 +67,18 @@ Description = c("Date (DD/MM/YYYY)",
                 "Relative Humidity (%)",
                 "AH Absolute Humidity")
 desc.tbl = data.frame(Variables, Type, Description)
-kable(desc.tbl) %>%
-  kable_styling(bootstrap_options = "striped", full_width = F, font_size = 10)
+kable(desc.tbl)
 ```
 
 
-Here is a sample of the data that we use:
+Here you can see the data that we use:
 
-```{r read data, echo= FALSE, message=FALSE, warning=FALSE}
+```{r read data, warnings = FALSE, echo= FALSE, message=FALSE}
 # first we read the data in
 airq <- readr::read_csv(here::here("data","clean_aq.csv"))
-kable(head(airq, 5)) %>%
-  kable_styling(bootstrap_options = "striped", full_width = F, font_size = 10)
+DT::datatable(head(airq, 50))
 ```
+
 
 ### Methods
 
@@ -107,10 +96,7 @@ We first performed some exploratory data analysis of the air quality data.
 
 #### Graph 1: Correlogram of pollutants
 
-
-```{r echo=FALSE, warning = FALSE, out.width="60%", fig.align='center'}
-include_graphics("../Images/correlation.png")
-```
+![](../Images/correlation.png)
 
 
 Looking at the correlations of the pollutants with weather, we can see that for all pollutants except NOx, temperature (T) is positively correlated, although weakly so. This means that higher temperatures correspond to higher concentrations of the gases. Relative humidity (RH) is negatively and correlated to temperature and has a weak negative correlation to the concentrations of pollutants, except NOx. Absolute humidity (AH) has stronger correlations, mostly positive, although, like temperature, it has a negative correlation with NOx. 
@@ -121,9 +107,8 @@ Looking at the correlations of the pollutants with weather, we can see that for 
 
 The plot below shows the **daily** averaged concentrations of some of the pollutants (tin oxide, benzene, and Titania) for a year.
 
-```{r echo=FALSE, warning = FALSE, out.width="70%", fig.align='center'}
-include_graphics("../Images/pollutantsvstime.png")
-```
+![](../Images/pollutantsvstime.png)
+
 
 
 #### Graph 3: Concentration Temperature and Humidity over Time
@@ -131,10 +116,7 @@ include_graphics("../Images/pollutantsvstime.png")
 
 The plot below show the **daily** averaged values of temperature and humidity for a year.
 
-```{r echo=FALSE, warning = FALSE, out.width="70%", fig.align='center'}
-include_graphics("../Images/weathervstime.png")
-```
-
+![](../Images/weathervstime.png)
 
 
 #### Graph 4: Temperature vs. Benzene concentration
@@ -142,42 +124,35 @@ include_graphics("../Images/weathervstime.png")
 
 The following graph shows the relationship of benzene to temperature over the year in which data was recorded. The plot suggests there is perhaps a slight relationship. Linear regression in future work will help to clarify the relationships between weather and pollutant concentrations. 
 
-```{r echo=FALSE, warning = FALSE, out.width="60%", fig.align='center'}
-include_graphics("../Images/tempvsbenzene.png")
-```
+![](../Images/tempvsbenzene.png)
+
 
 
 ### Linear regression
 
 
-#### Coefficients Plot
-
-
 We then perform linear regression of all the separate pollutants with temperature and absolute humidity. The graph below shows the coeffecients for linear regression for temperature and humidity with all the various pollutants. 
 
-```{r echo=FALSE, warning = FALSE, out.width="60%", fig.align='center'}
-include_graphics("../Images/CoefPlot_Group4.png")
-```
+
+![](../Images/CoefPlot_Group4.png)
 
 
-#### Regression Output
-
-
-The table below shows an example of the output of the linear regression model. Dependent variable is Benzene, independent variables are temperature (Temp), and absolute humidity (AH).  
-
-```{r echo=FALSE, warning = FALSE, out.width="60%", fig.align='center'}
+The table below shows an example of the output of the linear regression model. 
+```{r echo=FALSE, warnings = FALSE}
 (benzene_coefs <- readRDS(here::here("Data", "Benzene.rds")))
+
 ```
 
 
-## Discussion and Conclusion
 
 The next plot shows three of the pollutants (Benzene, Titania and Tin Oxide) plotted with temperature with the linear regression line also plotted. From looking at the plots we can tell the the linear regression line does not represent a lot of the data well. This is shown in the low correlations values (in the plot titles). 
 
-```{r echo=FALSE, warning = FALSE, out.width="60%", fig.align='center'}
-include_graphics("../Images/more_lr_plots.png")
-```
+![](../Images/more_lr_plots.png)
 
+
+
+
+## Discussion and Conclusion
 
 It is clear that just looking at the values of temperature and humidity on their own do not provide sufficient information to explain or predict the given concentrations of pollutants. This can be seen in the figures produced above where the linear regression line does not capture well the variation of pollutants. Although weather will affect some pollutants, a more important determinant of pollutant concentrations is emissions. These often vary with time of day and human activity and thus a model incorporating weather as well as these other important variables would likely be more accurate. 
 
