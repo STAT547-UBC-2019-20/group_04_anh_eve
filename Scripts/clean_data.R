@@ -56,13 +56,5 @@ main <- function(data_dir, infilename, outfilename){
 
 main(opt$data_dir, opt$infilename, opt$outfilename)
 
-#example of how to run:
-# Rscript Scripts/clean_data.R --data_dir="Data" --infilename="aq.csv" --outfilename="clean_aq.csv"
-
-# Round the values to 2 decimal places
-#for correlation plot
-#airq_corr <- cor(airq[3:15], use = "complete.obs")
-#airq_corr <- round(airq_corr,2)
-
 
 
