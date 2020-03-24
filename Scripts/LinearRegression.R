@@ -24,7 +24,7 @@ library(corrplot)
 library(ggplot2)
 library(cowplot)
 library(docopt)
-
+library(testthat)
 
 opt <- docopt(doc)
 
@@ -56,6 +56,11 @@ main <- function(path, datafilename){
     saveRDS(regressions[[i]], file = paste("Data/",chemnames[[i]], ".rds", sep = ""))
   }
   
+  ### > Test 1 ----
+  test_that("rds files for all chemicals were successfully created", {
+    map(chemnames,
+        ~ expect_true(file.exists(here::here(glue::glue("Data/",.x, ".rds")))))
+  })
   
   ##### COEFFICIENTS PLOTS
   
@@ -195,10 +200,16 @@ main <- function(path, datafilename){
   more_lr = ggdraw(aligned_plots[[3]]) %>%
     ggsave(filename = "Images/more_lr_plots.png", device = 'png', width=9, height=10)
 
-  
+  ### > Test 2 ----
+  Images = c("Images/CoefPlot_Group4", "Images/lr_plots", "Images/more_lr_plots")
+  test_that("all the images were successfully created", {
+    map(Images,
+        ~ expect_true(file.exists(here::here(glue::glue(.x, ".png")))))
+  })
   
   print("Script should have run sucessfully")
   print("Images saves to Images folder")
+  print("Pass all tests")
   
 }
 
