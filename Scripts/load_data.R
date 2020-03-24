@@ -15,30 +15,30 @@ library(tidyverse)
 library(glue)
 library(tidyr)
 library(docopt)
+library(testthat)
 
 opt <- docopt(doc)
 
 main <- function(url, outfilename){
   
+  #loading data
   data_url <- url
-  path <- here::here("data", outfilename)
+  path <- here("data", outfilename)
   
-  readr::write_csv(readr::read_csv(data_url), path)
+  write_csv(read_csv(data_url), path) #read data from url, then write it to local directory called "path"
   
-  data <- readr::read_csv(path)
+  #testing the saved cvs is the same as the data from the url
+  data <- read_csv(path) #load the saved data
+  test_that("first value of the third column is equal to 2.6", {
+    expect_equal(data[[3]][1], 2.6, tolerance=1e-5)
+  })
+  
+  data
   
   print(glue::glue("Reading data from ", url, " and saving to ", outfilename))
-  
-  #return(data)
+  print("pass test")
   
 }
-
-#
-# example: run like this:
-# Rscript load_data.R --url="https://raw.githubusercontent.com/STAT547-UBC-2019-20/data_sets/master/airquality.csv" --outfilename="aq.csv"
-
-### tests?
-# could test that inputs are strings
 
 main(opt$url, opt$outfilename)
 
