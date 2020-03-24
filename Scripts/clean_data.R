@@ -53,6 +53,9 @@ main <- function(data_dir, infilename, outfilename){
                 "Titania", "NOx", "Tungsten_oxide_NOx", "NO2", "Tungsten_oxide_NO2", 
                 "Indium_oxide", "Temp", "RH", "AH", "Date_time")
   
+  for (i in 1:ncol(data)){
+    names(data)[i]=newnames[i]
+  }
   
   #save as csv ----
   readr::write_csv(data, here::here(data_dir, outfilename))
