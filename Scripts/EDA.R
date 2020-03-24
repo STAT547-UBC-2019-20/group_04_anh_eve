@@ -18,6 +18,7 @@ library(tidyquant)
 library(corrplot)
 library(cowplot)
 library(docopt)
+library(testthat)
 
 opt <- docopt(doc)
 
@@ -50,7 +51,7 @@ main <- function(data_dir, datafilename){
   #Aggregate Daily Average
   airq_daily <- data %>%
     group_by(Date) %>%
-    summarise_all(funs(mean), na.rm = TRUE)
+    summarise_all(list(mean), na.rm = TRUE)
   
   #data preparation: short to long, select pollutants to be included
   airq.lg.d <- airq_daily %>%
@@ -120,10 +121,16 @@ main <- function(data_dir, datafilename){
     ggsave(filename = "Images/tempvsbenzene.png", device = 'png', width=9, height=5)
   
 
+  ### > Test ----
+  Images = c("Images/pollutantsvstime", "Images/weathervstime", "Images/tempvsbenzene")
+  test_that("all the images were successfully created", {
+    map(Images,
+        ~ expect_true(file.exists(here::here(glue::glue(.x, ".png")))))
+  })
   
   
   print("The script completed successfully and images have been saved to Images/")
-  
+  print("Pass all tests")
   }
 
 main(opt$data_dir, opt$datafilename)
