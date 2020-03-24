@@ -2,14 +2,15 @@
 title: "Milestone 3"
 author: "Anh Le, Eve Wicksteed"
 output:
-  pdf_document: default
   html_document:
     df_print: paged
+  pdf_document: default
 editor_options:
   chunk_output_type: inline
+always_allow_html: yes
 ---
 
-```{r libraries, echo= FALSE, warnings = FALSE, echo= FALSE, message=FALSE}
+```{r libraries, echo= FALSE, warning = FALSE, echo= FALSE, message=FALSE}
 library(here)
 library(tidyverse)
 library(DT)
@@ -73,7 +74,7 @@ kable(desc.tbl)
 
 Here you can see the data that we use:
 
-```{r read data, warnings = FALSE, echo= FALSE, message=FALSE}
+```{r read data, warning = FALSE, echo= FALSE, message=FALSE}
 # first we read the data in
 airq <- readr::read_csv(here::here("data","clean_aq.csv"))
 DT::datatable(head(airq, 50))
@@ -138,7 +139,7 @@ We then perform linear regression of all the separate pollutants with temperatur
 
 
 The table below shows an example of the output of the linear regression model. 
-```{r echo=FALSE, warnings = FALSE}
+```{r echo=FALSE, warning = FALSE}
 (benzene_coefs <- readRDS(here::here("Data", "Benzene.rds")))
 
 ```
