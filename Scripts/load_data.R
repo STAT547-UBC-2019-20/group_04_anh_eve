@@ -15,7 +15,6 @@ library(tidyverse)
 library(glue)
 library(tidyr)
 library(docopt)
-library(testthat)
 
 opt <- docopt(doc)
 
@@ -27,16 +26,7 @@ main <- function(url, outfilename){
   
   write_csv(read_csv(data_url), path) #read data from url, then write it to local directory called "path"
   
-  #testing the saved cvs is the same as the data from the url
-  data <- read_csv(path) #load the saved data
-  test_that("first value of the third column is equal to 2.6", {
-    expect_equal(data[[3]][1], 2.6, tolerance=1e-5)
-  })
-  
-  data
-  
   print(glue::glue("Reading data from ", url, " and saving to ", outfilename))
-  print("pass test")
   
 }
 

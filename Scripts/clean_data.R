@@ -30,22 +30,11 @@ main <- function(data_dir, infilename, outfilename){
   
   #convert Missing Values (tagged with -200 value) to NA ----
   data[data == -200] = NA 
-  # > test 1 ----
-  test_that("all -200 values are now converted to NA", {
-    expect_true(!(-200 %in% data))
-  })
-   
   
   # Convert numeric columns to 'double' type ----
   data[3:15] <- sapply(data[3:15], as.double)
   data = data %>% 
     mutate(Date_Time = ymd_hms(paste(data$Date, data$Time)))
-  # > test 2 ----
-  for (i in 3:15) {
-    test_that("numeric columns 3 to 15 in data are now double", {
-      expect_true(is.double(data[[i]]))
-    })
-  }
   
   
   # change col names: ----

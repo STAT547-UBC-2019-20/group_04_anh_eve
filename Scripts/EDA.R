@@ -120,17 +120,8 @@ main <- function(data_dir, datafilename){
   bz_w_time = ggdraw(aplots[[3]]) %>%
     ggsave(filename = "Images/tempvsbenzene.png", device = 'png', width=9, height=5)
   
-
-  ### > Test ----
-  Images = c("Images/pollutantsvstime", "Images/weathervstime", "Images/tempvsbenzene")
-  test_that("all the images were successfully created", {
-    map(Images,
-        ~ expect_true(file.exists(here::here(glue::glue(.x, ".png")))))
-  })
-  
   
   print("The script completed successfully and images have been saved to Images/")
-  print("Pass all tests")
   }
 
 main(opt$data_dir, opt$datafilename)
