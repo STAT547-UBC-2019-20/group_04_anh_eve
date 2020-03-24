@@ -19,6 +19,8 @@ library(gapminder)
 # > Make plot ----
 
 # > Assign components to variables ----
+title <- htmlH1('Air quality and weather explorer')
+intro_text <- dccMarkdown('This is the template app for Milestone 4')
 
 # > Create Dash instance ----
 
@@ -32,6 +34,8 @@ app$layout( #describes the layout of the app.
   htmlDiv(
     list(
       ### Add components here
+      title,
+      intro_text
     )
   )
 )
