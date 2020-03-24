@@ -64,7 +64,7 @@ You can find the link to our project for milestone 4 [here](https://stat547-ubc-
   
 - Knit.R
 
-  `Rscript Scripts/Knit.R --docdir="Docs" --finalreport="milestone3.rmd"`
+  `Rscript Scripts/Knit.R --docdir="Docs" --finalreport="milestone4.rmd"`
 
 
 ### Or use GNU MAKE:
