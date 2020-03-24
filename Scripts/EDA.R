@@ -18,6 +18,7 @@ library(tidyquant)
 library(corrplot)
 library(cowplot)
 library(docopt)
+library(testthat)
 
 opt <- docopt(doc)
 
@@ -26,7 +27,7 @@ main <- function(data_dir, datafilename){
   data <- readr::read_csv(here::here(data_dir,datafilename))
   
 
-  #### CORRELATION PLOT
+  #### CORRELATION PLOT ---
   
   # set up graphics device
   png(filename="Images/correlation.png")
@@ -50,7 +51,7 @@ main <- function(data_dir, datafilename){
   #Aggregate Daily Average
   airq_daily <- data %>%
     group_by(Date) %>%
-    summarise_all(funs(mean), na.rm = TRUE)
+    summarise_all(list(mean), na.rm = TRUE)
   
   #data preparation: short to long, select pollutants to be included
   airq.lg.d <- airq_daily %>%
@@ -64,11 +65,10 @@ main <- function(data_dir, datafilename){
   
 
 
-  #### POLLUTANTS WITH TIME
+  #### POLLUTANTS WITH TIME ----
   # daily pollutants vs. time
   
   plot_aq_w_time <- airq.lg.d %>% 
-
     drop_na(Value) %>%
     ggplot(aes(x = Date, y = Value)) + 
     geom_line(aes(color = Variable, linetype = Variable)) +
@@ -79,13 +79,12 @@ main <- function(data_dir, datafilename){
     ggtitle("Pollutant variation with time")
 
 
-  ggsave(filename = "Images/pollutantsvstime.png", device = 'png', width=9, height=5)
   
   
-  #### WEATHER WITH TIME
+  #### WEATHER WITH TIME ----
 
   
-  airq_daily %>% 
+  plot_wea_w_time = airq_daily %>% 
     ggplot(aes(x = Date)) + 
     geom_line(aes(y=Temp, colour = "Temperature")) +
     theme_bw() +
@@ -97,11 +96,9 @@ main <- function(data_dir, datafilename){
     ggtitle("Weather variation with time")
 
   
-  ggsave(filename = "Images/weathervstime.png", device = 'png', width=9, height=5)
-  
   
 
-  #### TEMP VS BENZENE
+  #### TEMP VS BENZENE ----
 
   plot_bz_w_time <- data %>% 
     ggplot() + 
@@ -111,12 +108,29 @@ main <- function(data_dir, datafilename){
     ylab("Benzene concentration (microg/m^3")+
     ggtitle("Benzene concentration variation with temperature")
 
-  ggsave(filename = "Images/tempvsbenzene.png", device = 'png', width=9, height=5)
+  
+  ### Align plots ----
+  
+  aplots <- align_plots(plot_aq_w_time, plot_wea_w_time, plot_bz_w_time, align = 'hv', axis = 'tblr')
+  
+  aq_w_time = ggdraw(aplots[[1]]) %>%
+    ggsave(filename = "Images/pollutantsvstime.png", device = 'png', width=9, height=5)
+  wea_w_time = ggdraw(aplots[[2]]) %>%
+    ggsave(filename = "Images/weathervstime.png", device = 'png', width=9, height=5)
+  bz_w_time = ggdraw(aplots[[3]]) %>%
+    ggsave(filename = "Images/tempvsbenzene.png", device = 'png', width=9, height=5)
+  
 
+  ### > Test ----
+  Images = c("Images/pollutantsvstime", "Images/weathervstime", "Images/tempvsbenzene")
+  test_that("all the images were successfully created", {
+    map(Images,
+        ~ expect_true(file.exists(here::here(glue::glue(.x, ".png")))))
+  })
   
   
   print("The script completed successfully and images have been saved to Images/")
-  
+  print("Pass all tests")
   }
 
 main(opt$data_dir, opt$datafilename)

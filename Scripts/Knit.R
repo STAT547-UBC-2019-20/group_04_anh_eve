@@ -13,12 +13,22 @@ Usage: Knit.R --docdir=<docdir> --finalreport=<finalreport>
 
 library(here)
 library(docopt)
+library(testthat)
+
 
 opt <- docopt(doc)
 
 main <- function(docdir="Docs", finalreport) {
   rmarkdown::render(here(docdir, finalreport), 
                     c("html_document", "pdf_document"))
+  
+  fileformat = c(".pdf", ".html")
+  test_that("all the files were successfully created", {
+    map(fileformat,
+        ~ expect_true(file.exists(here::here(glue::glue("Docs/","milestone4", .x)))))
+  })
+  
+  print("Pass all tests")
 }
 
 

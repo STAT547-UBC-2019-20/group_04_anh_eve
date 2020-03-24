@@ -24,7 +24,7 @@ library(corrplot)
 library(ggplot2)
 library(cowplot)
 library(docopt)
-
+library(testthat)
 
 opt <- docopt(doc)
 
@@ -56,6 +56,11 @@ main <- function(path, datafilename){
     saveRDS(regressions[[i]], file = paste("Data/",chemnames[[i]], ".rds", sep = ""))
   }
   
+  ### > Test 1 ----
+  test_that("rds files for all chemicals were successfully created", {
+    map(chemnames,
+        ~ expect_true(file.exists(here::here(glue::glue("Data/",.x, ".rds")))))
+  })
   
   ##### COEFFICIENTS PLOTS
   
@@ -69,27 +74,22 @@ main <- function(path, datafilename){
   
   chemModels <- rbind(Tin_oxide %>% mutate(model = "Tin Oxide"),
                       Benzene %>% mutate(model = "Benzene"), 
-                      Titania %>% mutate(model = "Titania")) %>% 
-    relabel_predictors(c("(Intercept)" = "Intercept",
-                         Temp = "Temperature",
+                      Titania %>% mutate(model = "Titania")) %>%
+    relabel_predictors(c(Temp = "Temperature",
                          AH = "Absolute Humidity"))
   
-  small_multiple(chemModels, show_intercept = FALSE) +
+  # coef_plot ----
+  coef_plot = small_multiple(chemModels, dot_args = list(size = 0.75),
+                             whisker_args = list(size = 0.5), dist_args = list(alpha = 0.5),
+                             line_args = list(alpha = 0.75, size = 0.5), style = "distribution") +
     geom_hline(yintercept = 0, colour = "grey60", linetype = 2) +
     theme_bw() + 
     xlab("Pollutants/ Dependant Variables") +
     ylab("Coefficient Estimates") +
     ggtitle("Coefficient Estimates for Predicting Air Pollutants' Concentrate") +
-    theme(plot.title = element_text(size = 25, hjust = 0.5, family="serif", margin=margin(0,0,30,0)),
-          legend.position = "none",
-          legend.background = element_rect(colour="grey00"),
-          axis.text = element_text(size = 15, family="serif"),
-          axis.title.x = element_text(size = 25, family="serif", vjust = 1),
-          axis.title.y = element_text(size = 25, family="serif", vjust = 1))
+    theme(legend.position = "none")
       
-  
-  ggsave("Images/CoefPlot_Group4.png", device = 'png', width = 15, height = 10, units = "in")
-  
+
   
   ### add some more plots with the linear regression line:
   benzene_coefs <- readRDS(here::here("Data", "Benzene.rds"))
@@ -134,9 +134,11 @@ main <- function(path, datafilename){
     xlab("Temperature (Degrees C)") +
     ylab("concentration (microg/m^3)")+
     ggtitle(glue::glue("Tin Oxide concentration variation with temperature (corr = {round(cor_tin, 2)})"))
-    
+   
+   
+  # lrplot ----
   lrplot <- plot_grid(lr1, lr2, lr3, ncol=1)
-  ggsave(filename = "Images/lr_plots.png", device = 'png')
+  
   
   
   ##### NEW PLOT WITH LINEAR REGRESSION LINES
@@ -183,11 +185,31 @@ main <- function(path, datafilename){
     ggtitle(glue::glue("Tin oxide concentration variation with temperature (corr = {round(cor_tin, 2)})"))
   
   
+  # more_lrplots ----
   more_lrplots <- plot_grid(np1, np2, np3, ncol=1)
-  ggsave(filename = "Images/more_lr_plots.png", device = 'png')
+  
+  
+  ### Align plots ----
+  
+  aligned_plots <- align_plots(coef_plot, lrplot, more_lrplots, align = 'h', axis = 'lr')
+  
+  coef = ggdraw(aligned_plots[[1]]) %>%
+    ggsave(filename = "Images/CoefPlot_Group4.png", device = 'png', width=7, height=4.5)
+  lr = ggdraw(aligned_plots[[2]]) %>%
+    ggsave(filename = "Images/lr_plots.png", device = 'png', width=9, height=10)
+  more_lr = ggdraw(aligned_plots[[3]]) %>%
+    ggsave(filename = "Images/more_lr_plots.png", device = 'png', width=9, height=10)
+
+  ### > Test 2 ----
+  Images = c("Images/CoefPlot_Group4", "Images/lr_plots", "Images/more_lr_plots")
+  test_that("all the images were successfully created", {
+    map(Images,
+        ~ expect_true(file.exists(here::here(glue::glue(.x, ".png")))))
+  })
   
   print("Script should have run sucessfully")
   print("Images saves to Images folder")
+  print("Pass all tests")
   
 }
 
