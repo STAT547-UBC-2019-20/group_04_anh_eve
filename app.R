@@ -138,7 +138,8 @@ yaxisDropdown <- dccDropdown(
 # >> Dropdown component for Weather:
 # Storing the labels/values as a tibble means we can use this both 
 # to create the dropdown and convert colnames -> labels when plotting
-weatherKey <- tibble(label = c("None", "Temperature", "Absolute Humidity", "Relative Humidity"),
+weatherKey <- tibble(label = c("None", "Temperature in Celcius", 
+                               "Absolute Humidity (g/m3)", "Relative Humidity (%)"),
                      value = c("None", "Temp", "AH", "RH"))
 #Create the dropdown
 weatherDropdown <- dccDropdown(
