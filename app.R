@@ -151,24 +151,6 @@ weatherDropdown <- dccDropdown(
   value = "None"
 )
 
-# # >> Slider component for time ----
-# xslider = dccRangeSlider(
-#   id = "x-slider",
-#   count = 1,
-#   label = "YTD",
-#   step = "year",
-#   stepmode = "todate"
-# )
-# xaxis = list(
-#   rangeselector = list(
-#     buttons = list(
-#       list(
-#         count = 1,
-#         label = "YTD",
-#         step = "year",
-#         stepmode = "todate"),
-#       list(step = "all"))),
-#   rangeslider = list(type = "date")))
 
 # >> Graphs
 
