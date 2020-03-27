@@ -15,12 +15,28 @@ library(tidyverse)
 library(plotly)
 library(gapminder)
 
+######################################################
+
 # > Load data
 data <- readr::read_csv(here::here("Data","clean_aq.csv"))
 #Aggregate Daily Average
 airq_daily <- data %>%
   group_by(Date) %>%
   summarise_all(list(mean), na.rm = TRUE)
+
+# set up column for day of the week
+newdata <- data %>% 
+  mutate(DOTW = factor(case_when(weekdays(Date) == 'Monday' ~ 'Monday',
+                                 weekdays(Date) == 'Tuesday' ~ 'Tuesday',
+                                 weekdays(Date) == 'Wednesday' ~ 'Wednesday',
+                                 weekdays(Date) == 'Thursday' ~ 'Thursday',
+                                 weekdays(Date) == 'Friday' ~ 'Friday',
+                                 weekdays(Date) == 'Saturday' ~ 'Saturday',
+                                 weekdays(Date) == 'Sunday' ~ 'Sunday'),
+                       levels = c("Monday" , "Tuesday","Wednesday", "Thursday","Friday", "Saturday", "Sunday")))
+
+
+######################################################
 
 # 1. Make plot ----
 plot_aq_w_time <- function(yaxis = "Benzene",
@@ -96,6 +112,34 @@ plot_aq_w_temp <- function(yaxis = "Benzene"){
 }
 
 
+# create a distribution plot
+dist_plot <- function(yaxis = "Benzene"){
+  
+  # gets the label matching the column value
+  y_label <- yaxisKey$label[yaxisKey$value==yaxis]
+  
+  
+  plot <- newdata %>% 
+    ggplot() + 
+    geom_violin(aes(x = DOTW, y = !!sym(yaxis), fill=DOTW), width=1.2) +
+    geom_boxplot(aes(x = DOTW, y = !!sym(yaxis)), width=0.1, color="grey", alpha=0.4) +
+    theme_bw() +
+    labs(y = paste0("Concentration of ", y_label), 
+         x= "Day of the week") +
+    scale_x_discrete(drop = FALSE)+
+    theme(legend.position="none")
+  
+  
+  ggplotly(plot)
+}
+
+
+
+
+
+
+
+
 
 # 2. Assign components to variables ----
 # >> Heading ----
@@ -160,6 +204,13 @@ graph1 <- dccGraph(
 )
 
 
+dist_graph <- dccGraph(
+  id = 'dist',
+  figure=dist_plot()
+)
+
+
+
 # 3. Create instance of a Dash App ----
 app <- Dash$new(external_stylesheets = "https://codepen.io/chriddyp/pen/bWLwgP.css") 
 
@@ -180,7 +231,10 @@ app$layout( #describes the layout of the app.
       htmlIframe(height=25, width=10, style=list(borderWidth = 0)), #space
       #graph
       graph1,
-      htmlIframe(height=25, width=10, style=list(borderWidth = 0)) #space
+      htmlIframe(height=25, width=10, style=list(borderWidth = 0)), #space,
+      # eve's new graph
+      dist_graph,
+      htmlIframe(height=25, width=10, style=list(borderWidth = 0))
     )
   )
 )
@@ -199,6 +253,17 @@ app$callback(
     plot_aq_w_time(yaxis, weather)
   })
 
+
+# graph2
+app$callback(
+  #update figure of plot_aq_w_time
+  output=list(id = 'dist', property='figure'),
+  #based on values of date, y-axis components
+  params=list(input(id = 'y-axis', property='value')),
+  #this translates your list of params into function arguments
+  function(yaxis) {
+    dist_plot(yaxis)
+  })
 
 # 6. Update Plot ----
 
