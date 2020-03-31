@@ -169,7 +169,7 @@ div_sidebar <- htmlDiv(
     htmlLabel('Select Weather Variable:'),
     weatherDropdown
 
-  )
+  ), style= list('flex-basis' = '20%')
 )
 
 
@@ -177,7 +177,7 @@ div_main <- htmlDiv(
   list(graph1,
        aq_wx,
        dist_graph
-  )
+  ), style= list('flex-basis' = '70%')
 )
 
 # specify layout:
@@ -186,7 +186,7 @@ app$layout(
   htmlDiv(list(
   div_header),
   style = list(
-    backgroundColor = '#337DFF', ## COLOUR OF YOUR CHOICE
+    backgroundColor = '#0B2326', 
     textAlign = 'center',
     color = 'white',
     margin = 5,
@@ -197,7 +197,7 @@ app$layout(
       div_sidebar,
       div_main
     ),
-    style = list('background-color' = '#BBCFF1',
+    style = list('display' = 'flex', 'background-color' = '#0E9AAB',
                  'padding' = 10),
   )
 )
