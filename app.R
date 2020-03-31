@@ -15,6 +15,9 @@ library(tidyverse)
 library(plotly)
 library(gapminder)
 
+# load in the functions that make graphs
+source('dash_functions.R')
+
 ######################################################
 
 # > Load data
@@ -37,109 +40,6 @@ newdata <- data %>%
 
 
 ######################################################
-
-# 1. Make plot ----
-plot_aq_w_time <- function(yaxis = "Benzene",
-                           weather = "None"){
-  
-  # gets the label matching the column value
-  y_label <- yaxisKey$label[yaxisKey$value==yaxis]
-  
-  # Second y-axis
-  ay <- list(
-    overlaying = "y",
-    side = "right"
-  )
-  
-  # make the polutant plot
-  p1 <- airq_daily %>% 
-    ggplot(aes(x = Date, y = !!sym(yaxis))) + 
-    geom_line(na.rm = T, color='green', size = 0.3) +
-    theme_bw() +
-    #coord_x_date(xlim = c("2005-01-04", "2005-04-04")) +
-    xlab("Date") +
-    ylab("microg/m<sup>3</sup>")+
-    ggtitle(paste0("Variation of ", y_label, " concentration over time ")) 
-  
-  if (weather == "Temp"){
-    p1 <- p1 + geom_line(data = airq_daily, aes(y = Temp),na.rm = T, color='red', size = 0.3) 
-  } else {
-    if (weather == "AH") {
-      p1 <- p1 + geom_line(data = airq_daily, aes(y = AH),na.rm = T, color='dodgerblue4', size = 0.3) 
-    } else {
-      if (weather == "RH") {
-        p1 <- p1 + geom_line(data = airq_daily, aes(y = RH),na.rm = T, color='dodgerblue', size = 0.3)
-      }
-    }
-  }
-  
-  ggplotly(p1) %>% layout(
-    # NEW: this is optional but changes how the graph appears on click
-    # more layout stuff: https://plotly-r.com/improving-ggplotly.html
-    xaxis = list(
-      rangeslider = list(type = "date")),
-    yaxis2 = ay)
-}
-
-
-plot_aq_w_temp <- function(yaxis = "Benzene"){
-  
-  # gets the label matching the column value
-  y_label <- yaxisKey$label[yaxisKey$value==yaxis]
-  
-  # make second axis
-  ay <- list(
-    tickfont = list(color = "red"),
-    overlaying = "y",
-    side = "right",
-    title = "second y axis"
-  )
-  # make the polutant plot
-  p1 <- airq_daily %>% 
-    ggplot(aes(x = Date, y = !!sym(yaxis))) + 
-    geom_line(na.rm = T, color='green', size = 0.3) +
-    theme_bw() +
-    #coord_x_date(xlim = c("2005-01-04", "2005-04-04")) +
-    xlab("Date") +
-    ylab("microg/m<sup>3</sup>")+
-    ggtitle(paste0("Variation of ", y_label, " concentration over time ")) 
-  
-  ggplotly(p1) %>% layout(
-    # NEW: this is optional but changes how the graph appears on click
-    # more layout stuff: https://plotly-r.com/improving-ggplotly.html
-    xaxis = list(
-      rangeslider = list(type = "date")))
-}
-
-
-# create a distribution plot
-dist_plot <- function(yaxis = "Benzene"){
-  
-  # gets the label matching the column value
-  y_label <- yaxisKey$label[yaxisKey$value==yaxis]
-  
-  
-  plot <- newdata %>% 
-    ggplot() + 
-    geom_violin(aes(x = DOTW, y = !!sym(yaxis), fill=DOTW), width=1.2) +
-    geom_boxplot(aes(x = DOTW, y = !!sym(yaxis)), width=0.1, color="grey", alpha=0.4) +
-    theme_bw() +
-    labs(y = paste0("Concentration of ", y_label), 
-         x= "Day of the week") +
-    scale_x_discrete(drop = FALSE)+
-    theme(legend.position="none")
-  
-  
-  ggplotly(plot)
-}
-
-
-
-
-
-
-
-
 
 # 2. Assign components to variables ----
 # >> Heading ----
@@ -182,9 +82,9 @@ yaxisDropdown <- dccDropdown(
 # >> Dropdown component for Weather:
 # Storing the labels/values as a tibble means we can use this both 
 # to create the dropdown and convert colnames -> labels when plotting
-weatherKey <- tibble(label = c("None", "Temperature in Celcius", 
+weatherKey <- tibble(label = c("Temperature in Celcius", 
                                "Absolute Humidity (g/m3)", "Relative Humidity (%)"),
-                     value = c("None", "Temp", "AH", "RH"))
+                     value = c("Temp", "AH", "RH"))
 #Create the dropdown
 weatherDropdown <- dccDropdown(
   id = "weather",
@@ -192,7 +92,7 @@ weatherDropdown <- dccDropdown(
     1:nrow(weatherKey), function(i){
       list(label=weatherKey$label[i], value=weatherKey$value[i])
     }),
-  value = "None"
+  value = "Temp"
 )
 
 
@@ -200,15 +100,18 @@ weatherDropdown <- dccDropdown(
 
 graph1 <- dccGraph(
   id = 'graph1',
-  figure=plot_aq_w_time() # gets initial data using argument defaults
+  figure=plot_aq_w_time_e() # gets initial data using argument defaults
 )
-
 
 dist_graph <- dccGraph(
   id = 'dist',
   figure=dist_plot()
 )
 
+aq_wx <- dccGraph(
+  id = 'aqwx',
+  figure=plot_aq_w_wx()
+)
 
 
 # 3. Create instance of a Dash App ----
@@ -227,11 +130,14 @@ app$layout( #describes the layout of the app.
       htmlLabel('Select Polutants:'),
       yaxisDropdown,
       htmlIframe(height=25, width=10, style=list(borderWidth = 0)), #space
-      weatherDropdown,
-      htmlIframe(height=25, width=10, style=list(borderWidth = 0)), #space
       #graph
       graph1,
       htmlIframe(height=25, width=10, style=list(borderWidth = 0)), #space,
+      weatherDropdown,
+      htmlIframe(height=25, width=10, style=list(borderWidth = 0)), #space
+      # air quality weather graph
+      aq_wx,
+      htmlIframe(height=25, width=10, style=list(borderWidth = 0)),
       # eve's new graph
       dist_graph,
       htmlIframe(height=25, width=10, style=list(borderWidth = 0))
@@ -241,22 +147,22 @@ app$layout( #describes the layout of the app.
 
 # 5. App Callbacks ----
 
+
 # graph1
 app$callback(
   #update figure of plot_aq_w_time
   output=list(id = 'graph1', property='figure'),
   #based on values of date, y-axis components
-  params=list(input(id = 'y-axis', property='value'),
-              input(id = 'weather', property = 'value')),
+  params=list(input(id = 'y-axis', property='value')),
   #this translates your list of params into function arguments
-  function(yaxis, weather) {
-    plot_aq_w_time(yaxis, weather)
+  function(yaxis) {
+    plot_aq_w_time(yaxis)
   })
 
 
 # graph2
 app$callback(
-  #update figure of plot_aq_w_time
+  #update distribution plot
   output=list(id = 'dist', property='figure'),
   #based on values of date, y-axis components
   params=list(input(id = 'y-axis', property='value')),
@@ -264,6 +170,19 @@ app$callback(
   function(yaxis) {
     dist_plot(yaxis)
   })
+
+# plot 3
+app$callback(
+  #update figure of plot_aq_w_wx
+  output=list(id = 'aqwx', property='figure'),
+  #based on values of date, y-axis components
+  params=list(input(id = 'y-axis', property='value'),
+              input(id = 'weather', property = 'value')),
+  #this translates your list of params into function arguments
+  function(yaxis, weather) {
+    plot_aq_w_wx(yaxis, weather)
+  })
+
 
 # 6. Update Plot ----
 
