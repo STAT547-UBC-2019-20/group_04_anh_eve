@@ -150,6 +150,56 @@ app$layout( #describes the layout of the app.
   )
 )
 
+######################################################
+# layout number 2, with side bar etc. 
+
+div_header <- htmlDiv(
+  list(heading_title,
+       heading_subtitle
+  )
+)
+
+
+div_sidebar <- htmlDiv(
+  list(htmlLabel('Select y-axis metric:'),
+       htmlBr(),
+       yaxisDropdown,
+       htmlLabel('Select y scale : '),
+       htmlBr(),
+       logbutton,
+       sources
+  )
+)
+
+
+div_main <- htmlDiv(
+  list(graph,
+       graph_country
+  )
+)
+
+# specify layout:
+
+app$layout(
+  div_header,
+  style = list(
+    backgroundColor = '#337DFF', ## COLOUR OF YOUR CHOICE
+    textAlign = 'center',
+    color = 'white',
+    margin = 5,
+    marginTop = 0
+  ),
+  htmlDiv(
+    list(
+      div_side_bar,
+      div_main
+    ),
+    style = list('background-color' = '#BBCFF1',
+                 'padding' = 10),
+  )
+)
+
+
 
 ######################################################
 
