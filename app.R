@@ -123,75 +123,78 @@ app <- Dash$new(external_stylesheets = "https://codepen.io/chriddyp/pen/bWLwgP.c
 ######################################################
 
 # 4. Specify App layout ----
-app$layout( #describes the layout of the app.
-  htmlDiv(
-    list(
-      title,
-      htmlIframe(height=10, width=10, style=list(borderWidth = 0)), #space
-      intro_text,
-      #selection components
-      htmlIframe(height=25, width=10, style=list(borderWidth = 0)), #space
-      htmlLabel('Select Polutants:'),
-      yaxisDropdown,
-      htmlIframe(height=25, width=10, style=list(borderWidth = 0)), #space
-      #graph
-      graph1,
-      htmlIframe(height=25, width=10, style=list(borderWidth = 0)), #space,
-      htmlLabel('Select Weather Variable:'),
-      weatherDropdown,
-      htmlIframe(height=25, width=10, style=list(borderWidth = 0)), #space
-      # air quality weather graph
-      aq_wx,
-      htmlIframe(height=25, width=10, style=list(borderWidth = 0)),
-      # eve's new graph
-      dist_graph,
-      htmlIframe(height=25, width=10, style=list(borderWidth = 0))
-    )
-  )
-)
+# app$layout( #describes the layout of the app.
+#   htmlDiv(
+#     list(
+#       title,
+#       htmlIframe(height=10, width=10, style=list(borderWidth = 0)), #space
+#       intro_text,
+#       #selection components
+#       htmlIframe(height=25, width=10, style=list(borderWidth = 0)), #space
+#       htmlLabel('Select Polutants:'),
+#       yaxisDropdown,
+#       htmlIframe(height=25, width=10, style=list(borderWidth = 0)), #space
+#       #graph
+#       graph1,
+#       htmlIframe(height=25, width=10, style=list(borderWidth = 0)), #space,
+#       htmlLabel('Select Weather Variable:'),
+#       weatherDropdown,
+#       htmlIframe(height=25, width=10, style=list(borderWidth = 0)), #space
+#       # air quality weather graph
+#       aq_wx,
+#       htmlIframe(height=25, width=10, style=list(borderWidth = 0)),
+#       # eve's new graph
+#       dist_graph,
+#       htmlIframe(height=25, width=10, style=list(borderWidth = 0))
+#     )
+#   )
+# )
 
 ######################################################
 # layout number 2, with side bar etc. 
 
 div_header <- htmlDiv(
-  list(heading_title,
-       heading_subtitle
-  )
+  list(title, 
+       intro_text)
 )
 
 
 div_sidebar <- htmlDiv(
-  list(htmlLabel('Select y-axis metric:'),
-       htmlBr(),
-       yaxisDropdown,
-       htmlLabel('Select y scale : '),
-       htmlBr(),
-       logbutton,
-       sources
+  list(
+    #selection components
+    htmlLabel('Select Polutants:'),
+    htmlBr(),
+    yaxisDropdown,
+    htmlBr(),
+    htmlLabel('Select Weather Variable:'),
+    weatherDropdown
+
   )
 )
 
 
 div_main <- htmlDiv(
-  list(graph,
-       graph_country
+  list(graph1,
+       aq_wx,
+       dist_graph
   )
 )
 
 # specify layout:
 
 app$layout(
-  div_header,
+  htmlDiv(list(
+  div_header),
   style = list(
     backgroundColor = '#337DFF', ## COLOUR OF YOUR CHOICE
     textAlign = 'center',
     color = 'white',
     margin = 5,
     marginTop = 0
-  ),
+  )),
   htmlDiv(
     list(
-      div_side_bar,
+      div_sidebar,
       div_main
     ),
     style = list('background-color' = '#BBCFF1',
