@@ -15,6 +15,11 @@ library(tidyverse)
 library(plotly)
 library(gapminder)
 
+# load in the functions that make graphs
+source('Scripts/dash_functions.R')
+
+######################################################
+
 # > Load data
 data <- readr::read_csv(here::here("Data","clean_aq.csv"))
 #Aggregate Daily Average
@@ -22,80 +27,19 @@ airq_daily <- data %>%
   group_by(Date) %>%
   summarise_all(list(mean), na.rm = TRUE)
 
-# 1. Make plot ----
-plot_aq_w_time <- function(yaxis = "Benzene",
-                           weather = "None"){
-  
-  # gets the label matching the column value
-  y_label <- yaxisKey$label[yaxisKey$value==yaxis]
-  
-  # Second y-axis
-  ay <- list(
-    overlaying = "y",
-    side = "right"
-  )
-  
-  # make the polutant plot
-  p1 <- airq_daily %>% 
-    ggplot(aes(x = Date, y = !!sym(yaxis))) + 
-    geom_line(na.rm = T, color='green', size = 0.3) +
-    theme_bw() +
-    #coord_x_date(xlim = c("2005-01-04", "2005-04-04")) +
-    xlab("Date") +
-    ylab("microg/m<sup>3</sup>")+
-    ggtitle(paste0("Variation of ", y_label, " concentration over time ")) 
-  
-  if (weather == "Temp"){
-    p1 <- p1 + geom_line(data = airq_daily, aes(y = Temp),na.rm = T, color='red', size = 0.3) 
-  } else {
-    if (weather == "AH") {
-      p1 <- p1 + geom_line(data = airq_daily, aes(y = AH),na.rm = T, color='dodgerblue4', size = 0.3) 
-    } else {
-      if (weather == "RH") {
-        p1 <- p1 + geom_line(data = airq_daily, aes(y = RH),na.rm = T, color='dodgerblue', size = 0.3)
-      }
-    }
-  }
-  
-  ggplotly(p1) %>% layout(
-    # NEW: this is optional but changes how the graph appears on click
-    # more layout stuff: https://plotly-r.com/improving-ggplotly.html
-    xaxis = list(
-      rangeslider = list(type = "date")),
-    yaxis2 = ay)
-}
+# set up column for day of the week
+newdata <- data %>% 
+  mutate(DOTW = factor(case_when(weekdays(Date) == 'Monday' ~ 'Monday',
+                                 weekdays(Date) == 'Tuesday' ~ 'Tuesday',
+                                 weekdays(Date) == 'Wednesday' ~ 'Wednesday',
+                                 weekdays(Date) == 'Thursday' ~ 'Thursday',
+                                 weekdays(Date) == 'Friday' ~ 'Friday',
+                                 weekdays(Date) == 'Saturday' ~ 'Saturday',
+                                 weekdays(Date) == 'Sunday' ~ 'Sunday'),
+                       levels = c("Monday" , "Tuesday","Wednesday", "Thursday","Friday", "Saturday", "Sunday")))
 
 
-plot_aq_w_temp <- function(yaxis = "Benzene"){
-  
-  # gets the label matching the column value
-  y_label <- yaxisKey$label[yaxisKey$value==yaxis]
-  
-  # make second axis
-  ay <- list(
-    tickfont = list(color = "red"),
-    overlaying = "y",
-    side = "right",
-    title = "second y axis"
-  )
-  # make the polutant plot
-  p1 <- airq_daily %>% 
-    ggplot(aes(x = Date, y = !!sym(yaxis))) + 
-    geom_line(na.rm = T, color='green', size = 0.3) +
-    theme_bw() +
-    #coord_x_date(xlim = c("2005-01-04", "2005-04-04")) +
-    xlab("Date") +
-    ylab("microg/m<sup>3</sup>")+
-    ggtitle(paste0("Variation of ", y_label, " concentration over time ")) 
-  
-  ggplotly(p1) %>% layout(
-    # NEW: this is optional but changes how the graph appears on click
-    # more layout stuff: https://plotly-r.com/improving-ggplotly.html
-    xaxis = list(
-      rangeslider = list(type = "date")))
-}
-
-
+######################################################
 
 # 2. Assign components to variables ----
 # >> Heading ----
@@ -138,9 +82,9 @@ yaxisDropdown <- dccDropdown(
 # >> Dropdown component for Weather:
 # Storing the labels/values as a tibble means we can use this both 
 # to create the dropdown and convert colnames -> labels when plotting
-weatherKey <- tibble(label = c("None", "Temperature in Celcius", 
+weatherKey <- tibble(label = c("Temperature in Celcius", 
                                "Absolute Humidity (g/m3)", "Relative Humidity (%)"),
-                     value = c("None", "Temp", "AH", "RH"))
+                     value = c("Temp", "AH", "RH"))
 #Create the dropdown
 weatherDropdown <- dccDropdown(
   id = "weather",
@@ -148,7 +92,7 @@ weatherDropdown <- dccDropdown(
     1:nrow(weatherKey), function(i){
       list(label=weatherKey$label[i], value=weatherKey$value[i])
     }),
-  value = "None"
+  value = "Temp"
 )
 
 
@@ -156,51 +100,130 @@ weatherDropdown <- dccDropdown(
 
 graph1 <- dccGraph(
   id = 'graph1',
-  figure=plot_aq_w_time() # gets initial data using argument defaults
+  figure=plot_aq_w_time_e() # gets initial data using argument defaults
 )
 
+dist_graph <- dccGraph(
+  id = 'dist',
+  figure=dist_plot()
+)
+
+aq_wx <- dccGraph(
+  id = 'aqwx',
+  figure=plot_aq_w_wx()
+)
+
+
+######################################################
 
 # 3. Create instance of a Dash App ----
 app <- Dash$new(external_stylesheets = "https://codepen.io/chriddyp/pen/bWLwgP.css") 
 
 
+######################################################
+
 # 4. Specify App layout ----
-app$layout( #describes the layout of the app.
+
+# layout with side bar etc. 
+
+div_header <- htmlDiv(
+  list(title, 
+       intro_text)
+)
+
+
+div_sidebar <- htmlDiv(
+  list(
+    #selection components
+    htmlLabel('Select Polutants:'),
+    htmlBr(),
+    yaxisDropdown,
+    htmlBr(),
+    htmlLabel('Select Weather Variable:'),
+    weatherDropdown
+
+  ), style= list('flex-basis' = '20%')
+)
+
+
+div_main <- htmlDiv(
+  list(graph1,
+       aq_wx,
+       dist_graph
+  ), style= list('flex-basis' = '70%')
+)
+
+# specify layout:
+
+app$layout(
+  htmlDiv(list(
+  div_header),
+  style = list(
+    backgroundColor = '#0B2326', 
+    textAlign = 'center',
+    color = 'white',
+    margin = 5,
+    marginTop = 0
+  )),
   htmlDiv(
     list(
-      title,
-      htmlIframe(height=10, width=10, style=list(borderWidth = 0)), #space
-      intro_text,
-      #selection components
-      htmlIframe(height=25, width=10, style=list(borderWidth = 0)), #space
-      htmlLabel('Select Polutants:'),
-      yaxisDropdown,
-      htmlIframe(height=25, width=10, style=list(borderWidth = 0)), #space
-      weatherDropdown,
-      htmlIframe(height=25, width=10, style=list(borderWidth = 0)), #space
-      #graph
-      graph1,
-      htmlIframe(height=25, width=10, style=list(borderWidth = 0)) #space
-    )
+      div_sidebar,
+      div_main
+    ),
+    style = list('display' = 'flex', 'background-color' = '#0E9AAB',
+                 'padding' = 10),
   )
 )
 
+
+
+######################################################
+
 # 5. App Callbacks ----
+
 
 # graph1
 app$callback(
   #update figure of plot_aq_w_time
   output=list(id = 'graph1', property='figure'),
   #based on values of date, y-axis components
+  params=list(input(id = 'y-axis', property='value')),
+  #this translates your list of params into function arguments
+  function(yaxis) {
+    plot_aq_w_time(yaxis)
+  })
+
+
+# graph2
+app$callback(
+  #update distribution plot
+  output=list(id = 'dist', property='figure'),
+  #based on values of date, y-axis components
+  params=list(input(id = 'y-axis', property='value')),
+  #this translates your list of params into function arguments
+  function(yaxis) {
+    dist_plot(yaxis)
+  })
+
+# plot 3
+app$callback(
+  #update figure of plot_aq_w_wx
+  output=list(id = 'aqwx', property='figure'),
+  #based on values of date, y-axis components
   params=list(input(id = 'y-axis', property='value'),
               input(id = 'weather', property = 'value')),
   #this translates your list of params into function arguments
   function(yaxis, weather) {
-    plot_aq_w_time(yaxis, weather)
+    plot_aq_w_wx(yaxis, weather)
   })
 
 
+######################################################
+
 # 6. Update Plot ----
+
+
+######################################################
 
 # 7. Run app ----
 app$run_server(debug=TRUE) #runs the Dash app, automatically reload the dashboard when changes are made
