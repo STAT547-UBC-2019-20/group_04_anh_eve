@@ -16,7 +16,7 @@ library(plotly)
 library(gapminder)
 
 # load in the functions that make graphs
-source('dash_functions.R')
+source('Scripts/dash_functions.R')
 
 ######################################################
 
