@@ -114,9 +114,13 @@ aq_wx <- dccGraph(
 )
 
 
+######################################################
+
 # 3. Create instance of a Dash App ----
 app <- Dash$new(external_stylesheets = "https://codepen.io/chriddyp/pen/bWLwgP.css") 
 
+
+######################################################
 
 # 4. Specify App layout ----
 app$layout( #describes the layout of the app.
@@ -144,6 +148,9 @@ app$layout( #describes the layout of the app.
     )
   )
 )
+
+
+######################################################
 
 # 5. App Callbacks ----
 
@@ -184,7 +191,12 @@ app$callback(
   })
 
 
+######################################################
+
 # 6. Update Plot ----
+
+
+######################################################
 
 # 7. Run app ----
 app$run_server(debug=TRUE) #runs the Dash app, automatically reload the dashboard when changes are made
