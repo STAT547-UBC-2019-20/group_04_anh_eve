@@ -63,8 +63,8 @@ dist_plot <- function(yaxis = "Benzene"){
   
   plot <- newdata %>% 
     ggplot() + 
-    geom_violin(aes(x = DOTW, y = !!sym(yaxis), fill=DOTW), width=1.2) +
-    geom_boxplot(aes(x = DOTW, y = !!sym(yaxis)), width=0.1, color="grey", alpha=0.4) +
+    geom_violin(aes(x = DOTW, y = !!sym(yaxis), fill=DOTW), width=1.2, alpha=0.4) +
+    geom_boxplot(aes(x = DOTW, y = !!sym(yaxis)), width=0.1, color="grey") +
     theme_bw() +
     labs(y = paste0("Concentration of ", y_label), 
          x= "Day of the week") +
