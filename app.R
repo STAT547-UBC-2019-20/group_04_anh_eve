@@ -137,6 +137,7 @@ app$layout( #describes the layout of the app.
       #graph
       graph1,
       htmlIframe(height=25, width=10, style=list(borderWidth = 0)), #space,
+      htmlLabel('Select Weather Variable:'),
       weatherDropdown,
       htmlIframe(height=25, width=10, style=list(borderWidth = 0)), #space
       # air quality weather graph
