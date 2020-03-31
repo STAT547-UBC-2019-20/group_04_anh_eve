@@ -151,26 +151,6 @@ weatherDropdown <- dccDropdown(
   value = "None"
 )
 
-# # >> Slider component for time ----
-# xslider = dccRangeSlider(
-#   id = "x-slider",
-#   count = 1,
-#   label = "YTD",
-#   step = "year",
-#   stepmode = "todate"
-# )
-# xaxis = list(
-#   rangeselector = list(
-#     buttons = list(
-#       list(
-#         count = 1,
-#         label = "YTD",
-#         step = "year",
-#         stepmode = "todate"),
-#       list(step = "all"))),
-#   rangeslider = list(type = "date")))
-
-# >> Graphs
 
 graph1 <- dccGraph(
   id = 'graph1',
@@ -194,6 +174,7 @@ app$layout( #describes the layout of the app.
       htmlLabel('Select Polutants:'),
       yaxisDropdown,
       htmlIframe(height=25, width=10, style=list(borderWidth = 0)), #space
+      htmlLabel('Select Weather Components:'),
       weatherDropdown,
       htmlIframe(height=25, width=10, style=list(borderWidth = 0)), #space
       #graph
