@@ -123,35 +123,8 @@ app <- Dash$new(external_stylesheets = "https://codepen.io/chriddyp/pen/bWLwgP.c
 ######################################################
 
 # 4. Specify App layout ----
-# app$layout( #describes the layout of the app.
-#   htmlDiv(
-#     list(
-#       title,
-#       htmlIframe(height=10, width=10, style=list(borderWidth = 0)), #space
-#       intro_text,
-#       #selection components
-#       htmlIframe(height=25, width=10, style=list(borderWidth = 0)), #space
-#       htmlLabel('Select Polutants:'),
-#       yaxisDropdown,
-#       htmlIframe(height=25, width=10, style=list(borderWidth = 0)), #space
-#       #graph
-#       graph1,
-#       htmlIframe(height=25, width=10, style=list(borderWidth = 0)), #space,
-#       htmlLabel('Select Weather Variable:'),
-#       weatherDropdown,
-#       htmlIframe(height=25, width=10, style=list(borderWidth = 0)), #space
-#       # air quality weather graph
-#       aq_wx,
-#       htmlIframe(height=25, width=10, style=list(borderWidth = 0)),
-#       # eve's new graph
-#       dist_graph,
-#       htmlIframe(height=25, width=10, style=list(borderWidth = 0))
-#     )
-#   )
-# )
 
-######################################################
-# layout number 2, with side bar etc. 
+# layout with side bar etc. 
 
 div_header <- htmlDiv(
   list(title, 
