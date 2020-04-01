@@ -69,7 +69,8 @@ dist_plot <- function(yaxis = "Benzene"){
     labs(y = paste0("Concentration of ", y_label), 
          x= "Day of the week") +
     scale_x_discrete(drop = FALSE)+
-    theme(legend.position="none")
+    theme(legend.position="none")+
+    ggtitle(paste0("Weekly distribution of ", y_label, " concentration"))
   
   
   ggplotly(plot)
