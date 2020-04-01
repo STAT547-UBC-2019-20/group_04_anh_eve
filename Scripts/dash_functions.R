@@ -3,7 +3,7 @@
 
 
 # 1. Make plot ----
-plot_aq_w_time_e <- function(yaxis = "Benzene"){
+plot_aq_w_time <- function(yaxis = "Benzene"){
   
   # gets the label matching the column value
   y_label <- yaxisKey$label[yaxisKey$value==yaxis]

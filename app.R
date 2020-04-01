@@ -100,7 +100,7 @@ weatherDropdown <- dccDropdown(
 
 graph1 <- dccGraph(
   id = 'graph1',
-  figure=plot_aq_w_time_e() # gets initial data using argument defaults
+  figure=plot_aq_w_time() # gets initial data using argument defaults
 )
 
 dist_graph <- dccGraph(
@@ -136,7 +136,6 @@ div_sidebar <- htmlDiv(
   list(
     #selection components
     htmlLabel('Select Polutants:'),
-    htmlBr(),
     yaxisDropdown,
     htmlBr(),
     htmlLabel('Select Weather Variable:'),
