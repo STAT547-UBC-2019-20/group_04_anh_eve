@@ -51,7 +51,8 @@ intro_text <- dccMarkdown('Here you can examine the effect of temperature and hu
                           Plot 2 shows the relationship of the pollutant concentrations with different 
                           weather variables. Plot 3 shows the weekly variation of the pollutant. 
                           Both the pollutant and weather variable can be selected in a dropdown on the 
-                          left hand side of the page.')
+                          left hand side of the page.
+                          The data source is the UCI Machine Learning Repository: https://archive.ics.uci.edu/ml/datasets/Air+Quality')
 
 
 # >> Dropdown component for Pollutants ----
