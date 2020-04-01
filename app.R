@@ -45,11 +45,14 @@ newdata <- data %>%
 # >> Heading ----
 title <- htmlH1('Air quality and weather explorer')
 
-intro_text <- dccMarkdown('This app will be used to examine the effect of temperature and humidity on pollutants. Users will be able to select different variables to look at and compare. They will be able to choose between temperature and humidity to display on the x-axis and between any of the recorded pollutants to display on the y axis. 
-
-They will also be able to choose an averaging period over which to look at the data as a time series (monthly, weekly or daily). There will also be a plot showing the daily distribution of pollutants with a dropdown to select the pollutant. 
-                          
-')
+intro_text <- dccMarkdown('Here you can examine the effect of temperature and humidity on air pollutants. 
+                          Plot 1 shows the variation of pollutants over the year that data was collected. 
+                          You can zoom in on certain time periods by using the date slider below the graph. 
+                          Plot 2 shows the relationship of the pollutant concentrations with different 
+                          weather variables. Plot 3 shows the weekly variation of the pollutant. 
+                          Both the pollutant and weather variable can be selected in a dropdown on the 
+                          left hand side of the page.
+                          The data source is the UCI Machine Learning Repository: https://archive.ics.uci.edu/ml/datasets/Air+Quality')
 
 
 # >> Dropdown component for Pollutants ----
@@ -135,7 +138,7 @@ div_header <- htmlDiv(
 div_sidebar <- htmlDiv(
   list(
     #selection components
-    htmlLabel('Select Polutants:'),
+    htmlLabel('Select Pollutant:'),
     yaxisDropdown,
     htmlBr(),
     htmlLabel('Select Weather Variable:'),
@@ -149,7 +152,7 @@ div_main <- htmlDiv(
   list(graph1,
        aq_wx,
        dist_graph
-  ), style= list('flex-basis' = '70%')
+  ), style= list('flex-basis' = '100%')
 )
 
 # specify layout:
@@ -169,8 +172,7 @@ app$layout(
       div_sidebar,
       div_main
     ),
-    style = list('display' = 'flex', 'background-color' = '#0E9AAB',
-                 'padding' = 10),
+    style = list('display' = 'flex', 'background-color' = 'white'),
   )
 )
 

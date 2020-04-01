@@ -15,7 +15,7 @@ plot_aq_w_time <- function(yaxis = "Benzene"){
     geom_line(na.rm = T, color='green', size = 0.3) +
     theme_bw() +
     #coord_x_date(xlim = c("2005-01-04", "2005-04-04")) +
-    xlab("Date") +
+    xlab("Date (select range using slider)") +
     ylab("Concentration (microg/m<sup>3</sup>)")+
     ggtitle(paste0("Variation of ", y_label, " concentration over time ")) 
   
@@ -69,7 +69,8 @@ dist_plot <- function(yaxis = "Benzene"){
     labs(y = paste0("Concentration of ", y_label), 
          x= "Day of the week") +
     scale_x_discrete(drop = FALSE)+
-    theme(legend.position="none")
+    theme(legend.position="none")+
+    ggtitle(paste0("Weekly distribution of ", y_label, " concentration"))
   
   
   ggplotly(plot)
