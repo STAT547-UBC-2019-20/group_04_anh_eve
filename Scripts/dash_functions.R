@@ -6,6 +6,14 @@ plot_aq_w_time <- function(yaxis = "Benzene"){
   # gets the label matching the column value
   y_label <- yaxisKey$label[yaxisKey$value==yaxis]
   
+  #add second y axis
+  ay <- list(
+    tickfont = list(color = "red"),
+    overlaying = "y",
+    side = "right",
+    title = "Celsius"
+  )
+  
   # make the polutant plot
   p1 <- airq_daily %>% 
     ggplot(aes(x = Date, y = !!sym(yaxis))) + 
@@ -17,13 +25,17 @@ plot_aq_w_time <- function(yaxis = "Benzene"){
     ggtitle(paste0("Daily concentration of ", y_label, " from March 2004 to April 2005 ")) + 
     scale_x_date(date_breaks = "1 month", date_minor_breaks = "1 week",
                  date_labels = "%B")
+    
+  p2 = p1 + geom_line(data = airq_daily, aes(y = Temp, color = "red"))
   
-  
-  ggplotly(p1, width = 900, height = 300) %>% plotly::layout(
+  ggplotly(p1, width = 900, height = 300) %>% 
+    #add_lines(name = "Pollutant concentration") %>% 
+    #add_lines(name = "Temperature", yaxis = "y2") %>% 
+    plotly::layout(
     # NEW: this is optional but changes how the graph appears on click
     # more layout stuff: https://plotly-r.com/improving-ggplotly.html
-    xaxis = list(
-      rangeslider = list(type = "date"))
+     xaxis = list(
+       rangeslider = list(type = "date"))
     )
 }
 
@@ -49,7 +61,7 @@ plot_aq_w_wx <- function(yaxis = "Benzene",
   
 
   
-  ggplotly(plot_bz_w_time, width = 900, height = 300) 
+  ggplotly(plot_bz_w_time, width = 900, height = 400)
 }
 
 #######################################
@@ -71,7 +83,7 @@ dist_plot <- function(yaxis = "Benzene"){
     theme(legend.position="none")
   
   
-  ggplotly(plot,width = 900, height = 300) 
+  ggplotly(plot,width = 900, height = 300)
 }
 
 

@@ -51,9 +51,9 @@ Because of the many, and severe, impacts of air quality, it is important to unde
                           
 For this reason our research question is: What is the affect of temperature and humidity on the concentration of air pollutants, such as benzene, titania, and tin oxide?') 
 
-annotation <- dccMarkdown('This app will be used to examine the effect of temperature and humidity on pollutants. Users will be able to select different variables to look at and compare. They will be able to choose between temperature and humidity to display on the x-axis and between any of the recorded pollutants to display on the y axis. 
+annotation <- dccMarkdown('This app will be used to examine the effect of temperature and humidity on pollutants. The first two graphs examine the variation in daily concentration of pollutants over the course of a year. Users will be able to select between ten air pollutants to display and compare. For graph 1, users can also look at the data at flexible time range. 
 
-They will also be able to choose an averaging period over which to look at the data as a time series (monthly, weekly or daily). There will also be a plot showing the daily distribution of pollutants with a dropdown to select the pollutant. 
+Graph 3 looks more closely into the relationship of each pollutants and a weather variant, be it temperature, absolute humidity or relative humidity. Users will be able to choose between different weather variants to display on the x-axis and between any of the recorded pollutants to display on the y axis. 
                           
 ')
 
