@@ -4,15 +4,15 @@ By Anh Le and Eve Wicksteed
 In our project we use air quality data from [the UPI Machine Learning Repository](https://archive.ics.uci.edu/ml/datasets/Air+Quality).
 
 
-# Milestones
+## Milestones
 
-## [Milestone 1](https://stat547-ubc-2019-20.github.io/group_04_anh_eve/Docs/milestone1.html)
+[Milestone 1](https://stat547-ubc-2019-20.github.io/group_04_anh_eve/Docs/milestone1.html)
 
-## [Milestone 2](https://stat547-ubc-2019-20.github.io/group_04_anh_eve/Docs/milestone2.html)
+[Milestone 2](https://stat547-ubc-2019-20.github.io/group_04_anh_eve/Docs/milestone2.html)
 
-## [Milestone 3](https://stat547-ubc-2019-20.github.io/group_04_anh_eve/Docs/milestone3.html)
+[Milestone 3](https://stat547-ubc-2019-20.github.io/group_04_anh_eve/Docs/milestone3.html)
 
-## [Milestone 4](https://stat547-ubc-2019-20.github.io/group_04_anh_eve/Docs/milestone4.html)
+[Milestone 4](https://stat547-ubc-2019-20.github.io/group_04_anh_eve/Docs/milestone4.html)
 
 
 ## Usage:
