@@ -45,20 +45,35 @@ newdata <- data %>%
 # >> Heading ----
 title <- htmlH1('Air quality and weather explorer')
 
-intro_text <- dccMarkdown('The adverse affects of air pollution on health are well documented and air pollution can lead to a large range of diseases and increased morbidity and mortality. Adverse health impacts include, but are not limited to, lung cancer risk, respiritory infections, allergic disease and asthma. These health risks can affect a large proportion of the population as many different groups are vulnerable to the effects of air pollution including infants, children, the elderly, people with impaired immune systems, and people who work or are physically active outdoors.
+intro_text <- dccMarkdown('The adverse affects of air pollution on health are well documented and air pollution can 
+lead to a large range of diseases and increased morbidity and mortality. Adverse health impacts include, 
+but are not limited to, lung cancer risk, respiritory infections, allergic disease and asthma. 
+These health risks can affect a large proportion of the population as many different groups are vulnerable 
+to the effects of air pollution including infants, children, the elderly, people with impaired immune systems, 
+and people who work or are physically active outdoors.
 
-Because of the many, and severe, impacts of air quality, it is important to understand patterns in the data. We have a dataset of air quality observations as well as temperature and humidity data which we will use to gain understanding of the patterns and impacts of weather on air quality. 
+Because of the many, and severe, impacts of air quality, it is important to understand patterns in the data. 
+We have a dataset of air quality observations as well as temperature and humidity data which we will use to gain 
+understanding of the patterns and impacts of weather on air quality. 
                           
-For this reason our research question is: What is the affect of temperature and humidity on the concentration of air pollutants, such as benzene, titania, and tin oxide?') 
+For this reason our research question is: What is the affect of temperature and humidity on the concentration 
+                          of air pollutants, such as benzene, titania, and tin oxide?') 
 
 annotation <- dccMarkdown('Here you can examine the effect of temperature and humidity on air pollutants. 
-                          Plot 1 shows the variation of pollutants over the year that data was collected. 
-                          You can zoom in on certain time periods by using the date slider below the graph. 
-                          Plot 2 shows the relationship of the pollutant concentrations with different 
-                          weather variables. Plot 3 shows the weekly variation of the pollutant. 
-                          Both the pollutant and weather variable can be selected in a dropdown on the 
-                          left hand side of the page.
-                          The data source is the UCI Machine Learning Repository: https://archive.ics.uci.edu/ml/datasets/Air+Quality')
+
+Choose the **Time Trend** tab to display Plot 1 & 2. Choose the **Weather Indexes** tab to display Plot 3. 
+
+**Plot 1** shows the daily concentration of pollutants over the year of which the data was collected. 
+You can zoom in on certain time period by using the date slider below the graph. Hover the mouse over the graph 
+to see the detailed information of each data point, including the date recorded and the concentration value. 
+**Plot 2** shows the daily distribution of pollutants concentration by day of the week. 
+**Plot 3** shows the relationship of the pollutant 
+concentrations with different weather indexes.
+
+Both the pollutant and weather indexes can be selected in a dropdown on the 
+left hand side of the page.
+                          
+[The data source is the UCI Machine Learning Repository](https://archive.ics.uci.edu/ml/datasets/Air+Quality)')
 
 
 
@@ -124,7 +139,31 @@ aq_wx <- dccGraph(
   figure=plot_aq_w_wx()
 )
 
+# >> Tabs
 
+tabs_styles = list(
+  'height'= '66px'
+)
+tab_style = list(
+  'borderBottom'= '1px solid #d6d6d6',
+  'padding'= '10px',
+  'fontWeight'= 'bold',
+  'fontFamily' = 'Tahoma'
+)
+
+tab_selected_style = list(
+  'borderTop'= '1px solid #d6d6d6',
+  'borderBottom'= '1px solid #d6d6d6',
+  'backgroundColor'= '#2C3E50',
+  'color'= 'white',
+  'padding'= '6px'
+)
+
+
+tabs <- dccTabs(id="tabs", value='tab-1', children=list(
+  dccTab(label='Time Trend', value='tab-1', style = tab_style, selected_style = tab_selected_style),
+  dccTab(label='Weather Indexes', value='tab-2', style = tab_style, selected_style = tab_selected_style)
+), style = tab_style)
 ######################################################
 
 # 3. Create instance of a Dash App ----
@@ -138,29 +177,43 @@ app <- Dash$new(external_stylesheets = "https://codepen.io/chriddyp/pen/bWLwgP.c
 # layout with side bar etc. 
 
 div_header <- htmlDiv(
-  list(title, 
-       intro_text)
+  list(
+    title, 
+    intro_text
+    )
 )
 
 
 div_sidebar <- htmlDiv(
   list(
     #selection components
+    tabs,
+    htmlBr(),
     htmlLabel('Select Pollutant:'),
     yaxisDropdown,
-    htmlBr(),
-    htmlLabel('Select Weather Variable:'),
+    htmlLabel('Select Weather Index:'),
     weatherDropdown,
     htmlBr(),
     annotation
-
-  ), style= list('flex-basis' = '20%')
+  ), style= list('flex-basis' = '27%')
 )
 
+div_space <- htmlDiv(
+  list(
+    htmlIframe(height=70, width=10, style=list(borderWidth = 0))
+  ), style= list('flex-basis' = '3%')
+)
 
-div_main <- htmlDiv(
-  list(graph1,
+div_main1 <- htmlDiv(
+  list(htmlBr(),
+       graph1,
        dist_graph,
+       htmlBr()
+  ), style= list('flex-basis' = '70%')
+)
+
+div_main2 <- htmlDiv(
+  list(htmlBr(),
        htmlBr(),
        aq_wx,
        htmlBr()
@@ -170,30 +223,41 @@ div_main <- htmlDiv(
 # specify layout:
 
 app$layout(
-  htmlDiv(list(
-  div_header),
-  style = list(
-    backgroundColor = '#0B2326', 
-    textAlign = 'center',
-    color = 'white',
-    margin = 5,
-    marginTop = 0
-  )),
+  htmlDiv(
+    list(
+      div_header
+      ), style = list( backgroundColor = '#2C3E50', 
+                       textAlign = 'center',
+                       color = 'white',
+                       margin = 5,
+                       marginTop = 0)
+    ),
   htmlDiv(
     list(
       div_sidebar,
-      div_main
-    ),
-    style = list('display' = 'flex', 'background-color' = 'white'),
+      div_space, 
+      htmlDiv(id='tabs-content')
+      ), style = list('display' = 'flex', 'background-color' = 'white'),
+    )
   )
+
+
+
+app$callback(output('tabs-content', 'children'),
+             params = list(input('tabs', 'value')),
+             function(tab){
+               if(tab == 'tab-1'){
+                 return(div_main1)
+               }
+               else if(tab == 'tab-2'){
+                 return(div_main2)
+               }
+             }
 )
-
-
 
 ######################################################
 
 # 5. App Callbacks ----
-
 
 # graph1
 app$callback(
