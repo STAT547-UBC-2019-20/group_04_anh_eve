@@ -1,0 +1,11 @@
+{
+  "name": "Weather and air quality explorer",
+  "description": "This app lets the user explore air pollution in an Italian city over a year by looking at the time series. The user can also look at how air quality varies over the course of a week. A section to explore the relationship of air quality variables to pollutant concetrations is also available.",
+  "keywords": [
+    "air pollution",
+    "weather",
+    "air quality",
+    "milestone 6",
+    "data explorer"
+]
+}
