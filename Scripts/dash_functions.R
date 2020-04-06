@@ -61,7 +61,7 @@ plot_aq_w_wx <- function(yaxis = "Benzene",
   
 
   
-  ggplotly(plot_bz_w_time, width = 900, height = 400)
+  ggplotly(plot_bz_w_time, width = 900, height = 500)
 }
 
 #######################################
