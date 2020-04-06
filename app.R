@@ -303,7 +303,7 @@ app$callback(
 ######################################################
 
 # 7. Run app ----
-app$run_server(debug=TRUE) #runs the Dash app, automatically reload the dashboard when changes are made
+app$run_server(host = '0.0.0.0', port = Sys.getenv('PORT', 8050))
 
 # command to add dash app in Rstudio viewer:
 # rstudioapi::viewer("http://127.0.0.1:8050")
