@@ -51,11 +51,15 @@ Because of the many, and severe, impacts of air quality, it is important to unde
                           
 For this reason our research question is: What is the affect of temperature and humidity on the concentration of air pollutants, such as benzene, titania, and tin oxide?') 
 
-annotation <- dccMarkdown('This app will be used to examine the effect of temperature and humidity on pollutants. The first two graphs examine the variation in daily concentration of pollutants over the course of a year. Users will be able to select between ten air pollutants to display and compare. For graph 1, users can also look at the data at flexible time range. 
+annotation <- dccMarkdown('Here you can examine the effect of temperature and humidity on air pollutants. 
+                          Plot 1 shows the variation of pollutants over the year that data was collected. 
+                          You can zoom in on certain time periods by using the date slider below the graph. 
+                          Plot 2 shows the relationship of the pollutant concentrations with different 
+                          weather variables. Plot 3 shows the weekly variation of the pollutant. 
+                          Both the pollutant and weather variable can be selected in a dropdown on the 
+                          left hand side of the page.
+                          The data source is the UCI Machine Learning Repository: https://archive.ics.uci.edu/ml/datasets/Air+Quality')
 
-Graph 3 looks more closely into the relationship of each pollutants and a weather variant, be it temperature, absolute humidity or relative humidity. Users will be able to choose between different weather variants to display on the x-axis and between any of the recorded pollutants to display on the y axis. 
-                          
-')
 
 
 # >> Dropdown component for Pollutants ----
@@ -142,7 +146,7 @@ div_header <- htmlDiv(
 div_sidebar <- htmlDiv(
   list(
     #selection components
-    htmlLabel('Select Polutants:'),
+    htmlLabel('Select Pollutant:'),
     yaxisDropdown,
     htmlBr(),
     htmlLabel('Select Weather Variable:'),
@@ -180,8 +184,7 @@ app$layout(
       div_sidebar,
       div_main
     ),
-    style = list('display' = 'flex', 'background-color' = '#0E9AAB',
-                 'padding' = 10),
+    style = list('display' = 'flex', 'background-color' = 'white'),
   )
 )
 
