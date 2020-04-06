@@ -45,7 +45,13 @@ newdata <- data %>%
 # >> Heading ----
 title <- htmlH1('Air quality and weather explorer')
 
-intro_text <- dccMarkdown('This app will be used to examine the effect of temperature and humidity on pollutants. Users will be able to select different variables to look at and compare. They will be able to choose between temperature and humidity to display on the x-axis and between any of the recorded pollutants to display on the y axis. 
+intro_text <- dccMarkdown('The adverse affects of air pollution on health are well documented and air pollution can lead to a large range of diseases and increased morbidity and mortality. Adverse health impacts include, but are not limited to, lung cancer risk, respiritory infections, allergic disease and asthma. These health risks can affect a large proportion of the population as many different groups are vulnerable to the effects of air pollution including infants, children, the elderly, people with impaired immune systems, and people who work or are physically active outdoors.
+
+Because of the many, and severe, impacts of air quality, it is important to understand patterns in the data. We have a dataset of air quality observations as well as temperature and humidity data which we will use to gain understanding of the patterns and impacts of weather on air quality. 
+                          
+For this reason our research question is: What is the affect of temperature and humidity on the concentration of air pollutants, such as benzene, titania, and tin oxide?') 
+
+annotation <- dccMarkdown('This app will be used to examine the effect of temperature and humidity on pollutants. Users will be able to select different variables to look at and compare. They will be able to choose between temperature and humidity to display on the x-axis and between any of the recorded pollutants to display on the y axis. 
 
 They will also be able to choose an averaging period over which to look at the data as a time series (monthly, weekly or daily). There will also be a plot showing the daily distribution of pollutants with a dropdown to select the pollutant. 
                           
@@ -55,16 +61,16 @@ They will also be able to choose an averaging period over which to look at the d
 # >> Dropdown component for Pollutants ----
 # Storing the labels/values as a tibble means we can use this both 
 # to create the dropdown and convert colnames -> labels when plotting
-yaxisKey <- tibble(label = c("Carbon monoxide (reference analyzer)", 
-                             "Tin oxide (nominally CO targeted)", 
-                             "Overall non-metanic Hydrocarbons (reference analyzer)", 
-                             "Benzene (reference analyzer)",
-                             "Titania (nominally NMHC targeted)", 
-                             "NOx (reference analyzer)", 
-                             "Tungsten oxide (nominally NOx targeted)", 
-                             "NO2 (reference analyzer)",
-                             "Tungsten oxide (nominally NO2 targeted)",
-                             "Indium oxide (nominally O3 targeted)"),
+yaxisKey <- tibble(label = c("Carbon monoxide", 
+                             "Tin oxide", 
+                             "Hydrocarbons", 
+                             "Benzene",
+                             "Titania", 
+                             "NOx", 
+                             "Tungsten oxide (NOx)", 
+                             "NO2",
+                             "Tungsten oxide (NO2)",
+                             "Indium oxide"),
                    value = c("CO", "Tin_oxide", "Hydro_carbons", "Benzene", 
                              "Titania", "NOx", "Tungsten_oxide_NOx", "NO2", 
                              "Tungsten_oxide_NO2", "Indium_oxide"))
@@ -82,7 +88,7 @@ yaxisDropdown <- dccDropdown(
 # >> Dropdown component for Weather:
 # Storing the labels/values as a tibble means we can use this both 
 # to create the dropdown and convert colnames -> labels when plotting
-weatherKey <- tibble(label = c("Temperature in Celcius", 
+weatherKey <- tibble(label = c("Temperature (C)", 
                                "Absolute Humidity (g/m3)", "Relative Humidity (%)"),
                      value = c("Temp", "AH", "RH"))
 #Create the dropdown
@@ -139,7 +145,9 @@ div_sidebar <- htmlDiv(
     yaxisDropdown,
     htmlBr(),
     htmlLabel('Select Weather Variable:'),
-    weatherDropdown
+    weatherDropdown,
+    htmlBr(),
+    annotation
 
   ), style= list('flex-basis' = '20%')
 )
@@ -147,8 +155,10 @@ div_sidebar <- htmlDiv(
 
 div_main <- htmlDiv(
   list(graph1,
+       dist_graph,
+       htmlBr(),
        aq_wx,
-       dist_graph
+       htmlBr()
   ), style= list('flex-basis' = '70%')
 )
 

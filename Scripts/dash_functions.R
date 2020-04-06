@@ -1,13 +1,10 @@
 
 #######################################
-
-
 # 1. Make plot ----
 plot_aq_w_time <- function(yaxis = "Benzene"){
   
   # gets the label matching the column value
   y_label <- yaxisKey$label[yaxisKey$value==yaxis]
-  
   
   # make the polutant plot
   p1 <- airq_daily %>% 
@@ -15,16 +12,19 @@ plot_aq_w_time <- function(yaxis = "Benzene"){
     geom_line(na.rm = T, color='green', size = 0.3) +
     theme_bw() +
     #coord_x_date(xlim = c("2005-01-04", "2005-04-04")) +
-    xlab("Date") +
+    xlab("Choose Time Range from March 2004 to April 2005") +
     ylab("Concentration (microg/m<sup>3</sup>)")+
-    ggtitle(paste0("Variation of ", y_label, " concentration over time ")) 
+    ggtitle(paste0("Daily concentration of ", y_label, " from March 2004 to April 2005 ")) + 
+    scale_x_date(date_breaks = "1 month", date_minor_breaks = "1 week",
+                 date_labels = "%B")
   
   
-  ggplotly(p1) %>% layout(
+  ggplotly(p1, width = 900, height = 300) %>% plotly::layout(
     # NEW: this is optional but changes how the graph appears on click
     # more layout stuff: https://plotly-r.com/improving-ggplotly.html
     xaxis = list(
-      rangeslider = list(type = "date")))
+      rangeslider = list(type = "date"))
+    )
 }
 
 
@@ -35,6 +35,7 @@ plot_aq_w_wx <- function(yaxis = "Benzene",
   
   # gets the label matching the column value
   y_label <- yaxisKey$label[yaxisKey$value==yaxis]
+  w_label <- weatherKey$label[weatherKey$value==weather]
   
   # make the polutant plot
   
@@ -42,14 +43,13 @@ plot_aq_w_wx <- function(yaxis = "Benzene",
     ggplot(aes(x = !!sym(weather), y = !!sym(yaxis))) + 
     geom_point(na.rm = T, alpha = 0.8) +
     theme_bw() +
-    xlab(weather) +
+    xlab(w_label) +
     ylab("Concentration (microg/m<sup>3</sup>)")+
-    ggtitle(paste0("Variation of ", y_label, " with ", weather)) 
+    ggtitle(paste0("Daily variation of ", y_label, " with ", w_label)) 
   
 
   
-  ggplotly(plot_bz_w_time) 
-  
+  ggplotly(plot_bz_w_time, width = 900, height = 300) 
 }
 
 #######################################
@@ -59,7 +59,6 @@ dist_plot <- function(yaxis = "Benzene"){
   
   # gets the label matching the column value
   y_label <- yaxisKey$label[yaxisKey$value==yaxis]
-  
   
   plot <- newdata %>% 
     ggplot() + 
@@ -72,7 +71,7 @@ dist_plot <- function(yaxis = "Benzene"){
     theme(legend.position="none")
   
   
-  ggplotly(plot)
+  ggplotly(plot,width = 900, height = 300) 
 }
 
 
