@@ -14,6 +14,10 @@ In our project we use air quality data from [the UPI Machine Learning Repository
 
 [Milestone 4](https://stat547-ubc-2019-20.github.io/group_04_anh_eve/Docs/milestone4.html)
 
+Milestone 5: Run `Rscript app.R` in the terminal.
+
+Milestone 6: [air pollution weather explorer app](https://airpollution-weather-explorer.herokuapp.com/)
+
 
 ## Usage:
 
@@ -70,10 +74,6 @@ To run all scripts first run: `make clean` in the terminal. And then run `make a
 
 
 # Dashboard information
-
-## Sketch
-
-![](/Images/dashboard_sketch_m4.png)
 
 ## Description
 
