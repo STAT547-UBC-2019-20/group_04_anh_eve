@@ -104,6 +104,7 @@ weatherDropdown <- dccDropdown(
 
 # >> Graphs
 
+
 graph1 <- dccGraph(
   id = 'graph1',
   figure=plot_aq_w_time() # gets initial data using argument defaults
